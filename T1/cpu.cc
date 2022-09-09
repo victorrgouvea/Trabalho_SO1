@@ -13,7 +13,6 @@ void CPU::Context::load()
     setcontext(&_context);
 }
 
-
 CPU::Context::~Context()
 {
     delete this->_stack;
