@@ -40,14 +40,13 @@ class CPU
 template<typename ... Tn>
 CPU::Context::Context(void (* func)(Tn ...), Tn ... an)
 {
-    this->_stack = new char [STACK_SIZE];
+    _stack = new char[STACK_SIZE];
     getcontext(&_context);
     _context.uc_link=0;
-    _context.uc_stack.ss_sp=(void *)(this->_stack);
+    _context.uc_stack.ss_sp=(void *)(_stack);
     _context.uc_stack.ss_size=STACK_SIZE;
     _context.uc_stack.ss_flags=0;
-    makecontext(&_context, (void (*)())(func), sizeof...(an), an...);
-    
+    makecontext(&_context, (void (*)())(func), sizeof...(an), an...);  
 }
 
 __END_API
