@@ -1,3 +1,7 @@
+# Após usar o comando 'make', rodar o executável 'main' para executar o código
+# Utilizar 'make clean' limpa os arquivos '.o' e o executável 'main' gerados
+
+# Compilador utilizado:
 CC = g++
 
 main: main.o main_class.o cpu.o
