@@ -42,7 +42,7 @@ CPU::Context::Context(void (* func)(Tn ...), Tn ... an)
 {
     _stack = new char[STACK_SIZE];
     getcontext(&_context);
-    
+
     if (_stack) {
         _context.uc_link=0;
         _context.uc_stack.ss_sp=(void *)(_stack);

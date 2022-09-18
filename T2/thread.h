@@ -45,21 +45,42 @@ public:
     /*
      * Retorna o ID da thread.
      */ 
-    int id();
+    int id() { return _id; }
 
     /*
      * Qualquer outro método que você achar necessário para a solução.
      */ 
 
+    /*
+     * Retorna o número total de threads da classe thread.
+     */ 
+    static int total_threads() { return _total_threads; }
+
+    Context * volatile context() { return _context; }
+
 private:
     int _id;
     Context * volatile _context;
     static Thread * _running;
-
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
      */ 
+    static int _total_threads;
 };
+
+template<typename ... Tn>
+Thread::Thread(void (* entry)(Tn ...), Tn ... an) {
+    
+    _context = new Context(entry, an...);
+
+    if (_context) {
+       // _id = _total_threads;
+        //_total_threads++;
+    } else {
+        std::cout << "Não foi possível criar a thread\n";
+        exit(-1);
+    }
+}
 
 __END_API
 

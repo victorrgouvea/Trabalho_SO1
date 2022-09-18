@@ -7,10 +7,10 @@ CC = g++
 main: main.o main_class.o cpu.o
 	$(CC) main.o main_class.o cpu.o -o main
 
-main.o: main.cc cpu.h main_class.h traits.h
+main.o: main.cc system.h main_class.h
 	$(CC) -c main.cc
 
-main_class.o: main_class.cc main_class.h traits.h cpu.h
+main_class.o: main_class.cc main_class.h traits.h cpu.h thread.h
 	$(CC) -c main_class.cc
 
 cpu.o: cpu.cc cpu.h traits.h
