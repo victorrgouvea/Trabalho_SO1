@@ -54,7 +54,12 @@ public:
     /*
      * Retorna o número total de threads da classe thread.
      */ 
-    static int total_threads() { return _total_threads; }
+    static int get_total_threads() { return total_threads; }
+
+    /*
+     * Setter de set_running
+     */ 
+    static void set_running(Thread * nova) { _running = nova; }
 
     Context * volatile context() { return _context; }
 
@@ -65,19 +70,25 @@ private:
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
      */ 
-    static int _total_threads;
+    static int total_threads;
+    static Thread * _main_thread;
 };
 
 template<typename ... Tn>
 Thread::Thread(void (* entry)(Tn ...), Tn ... an) {
     
     _context = new Context(entry, an...);
-
+    
     if (_context) {
-       // _id = _total_threads;
-        //_total_threads++;
+        _id = total_threads;
+        if (_id == 0) {
+            _running = this;
+            _main_thread = this;
+        }
+        db<Thread>(INF) << "Thread " << this->_id << " criada\n";
+        total_threads++;
     } else {
-        std::cout << "Não foi possível criar a thread\n";
+        db<Thread>(ERR) << "Criação da Thread falhou\n";
         exit(-1);
     }
 }

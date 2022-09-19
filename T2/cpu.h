@@ -4,6 +4,7 @@
 #include <ucontext.h>
 #include <iostream>
 #include "traits.h"
+#include "debug.h"
 
 __BEGIN_API
 
@@ -49,7 +50,7 @@ CPU::Context::Context(void (* func)(Tn ...), Tn ... an)
         _context.uc_stack.ss_size=STACK_SIZE;
         _context.uc_stack.ss_flags=0;
     } else {
-        std::cout << "Não foi possível criar a stack\n";
+        db<CPU>(ERR) << "Não foi possível criar a stack\n";
         exit(-1);
     }
 

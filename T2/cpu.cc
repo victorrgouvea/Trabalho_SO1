@@ -15,8 +15,11 @@ void CPU::Context::load()
 
 CPU::Context::~Context()
 {
-    if (_stack)
+    if (_stack) {
         delete[] _stack;
+    } else {
+        db<CPU>(WRN) << "Não há um contexto para deletar\n";
+    }
 }
 
 void CPU::switch_context(Context *from, Context *to)
