@@ -11,10 +11,10 @@ Thread * Thread::_main_thread = nullptr;
 
 int Thread::switch_context(Thread * prev, Thread * next)
 {
-    if (prev and next) {
+    if (prev && next) {
         CPU::switch_context(prev->context(), next->context());
         _running = next;
-        return  0;
+        return 0;
     } else {
         db<Thread>(ERR) << "Troca de contexto entre threads falhou\n";
         return -1;
@@ -24,8 +24,11 @@ int Thread::switch_context(Thread * prev, Thread * next)
 void Thread::thread_exit (int exit_code)
 {
     if (_context) {
-        _running = _main_thread;
+        if (this == _running) {
+            _running = _main_thread;
+        }
         delete _context;
+        total_threads--;
         db<Thread>(INF) << "thread " << this->id() << " exit com sucesso\n";
     } else {
         db<Thread>(ERR) << "thread " << this->id() << " exit falhou\n";
