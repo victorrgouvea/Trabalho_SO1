@@ -115,24 +115,21 @@ private:
 };
 
 template<typename ... Tn>
-inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : /* inicialização de _link */
+inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : _link(this, (std::chrono::duration_cast<std::chrono::microseconds>
+        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()))/* inicialização de _link */
 {
     _context = new Context(entry, an...);
     
     if (_context) {
         _id = total_threads;
-        _link(this, (std::chrono::duration_cast<std::chrono::microseconds>
-        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
         _state = READY;
-        _ready::insert(_link);
+        _ready.insert(&_link);
         db<Thread>(INF) << "Thread " << this->_id << " criada\n";
         total_threads++;
     } else {
         db<Thread>(ERR) << "Criação da Thread falhou\n";
         exit(-1);
     }
-
-
 }
 
 __END_API
