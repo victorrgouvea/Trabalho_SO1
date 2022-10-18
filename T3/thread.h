@@ -96,11 +96,11 @@ public:
      */ 
     Context * volatile context() { return _context; }
 
+
 private:
     int _id;
     Context * volatile _context;
     static Thread * _running;
-    
     static Thread _main; 
     static CPU::Context _main_context;
     static Thread _dispatcher;
@@ -126,7 +126,7 @@ inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : _link(this, (std::chr
         _state = READY;
 
         // Caso seja a thread main, não colocamos na lista de prontos
-        if (_id > 0) {
+        if (_id != 0) {
             _ready.insert(&_link);
         }
         
