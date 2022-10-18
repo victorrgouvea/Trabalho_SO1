@@ -94,6 +94,7 @@ public:
     /*
      * Qualquer outro método que você achar necessário para a solução.
      */ 
+    Context * volatile context() { return _context; }
 
 private:
     int _id;
@@ -123,9 +124,11 @@ inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : _link(this, (std::chr
     if (_context) {
         _id = total_threads;
         _state = READY;
-        _ready.insert(&_link);
-        db<Thread>(INF) << "Thread " << this->_id << " criada\n";
+        if (_id >= 0) {
+            _ready.insert(&_link);
+        }
         total_threads++;
+        db<Thread>(INF) << "Thread " << this->_id << " criada\n";
     } else {
         db<Thread>(ERR) << "Criação da Thread falhou\n";
         exit(-1);
