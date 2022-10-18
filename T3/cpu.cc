@@ -18,7 +18,7 @@ CPU::Context::~Context()
     if (_stack) {
         delete[] _stack;
     } else {
-        db<CPU>(WRN) << "Não há um contexto para deletar\n";
+        db<CPU>(WRN) << "O contexto não possui stack para deletar\n";
     }
 }
 

@@ -117,16 +117,19 @@ private:
 
 template<typename ... Tn>
 inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : _link(this, (std::chrono::duration_cast<std::chrono::microseconds>
-        (std::chrono::high_resolution_clock::now().time_since_epoch()).count()))/* inicialização de _link */
+        (std::chrono::high_resolution_clock::now().time_since_epoch()).count())) /* inicialização de _link */
 {
     _context = new Context(entry, an...);
     
     if (_context) {
         _id = total_threads;
         _state = READY;
-        if (_id >= 0) {
+
+        // Caso seja a thread main, não colocamos na lista de prontos
+        if (_id > 0) {
             _ready.insert(&_link);
         }
+        
         total_threads++;
         db<Thread>(INF) << "Thread " << this->_id << " criada\n";
     } else {
