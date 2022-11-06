@@ -17,11 +17,13 @@ protected:
 public:
 
     typedef Ordered_List<Thread> Ready_Queue;
+    typedef Ordered_List<Thread> Suspended_Queue;
 
     // Thread State
     enum State {
         RUNNING,
         READY,
+        SUSPENDED,
         FINISHING
     };
 
@@ -96,6 +98,12 @@ public:
      */ 
     Context * volatile context() { return _context; }
 
+    int join();
+
+    void suspend();
+
+    void resume();
+
 
 private:
     int _id;
@@ -107,12 +115,13 @@ private:
     static Ready_Queue _ready;
     Ready_Queue::Element _link;
     volatile State _state;
-
+    int _exit_code;
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
      */
+    static Suspended_Queue _suspended;
     static int total_threads;
-
+    Thread * _caller_of_join;
 };
 
 template<typename ... Tn>
@@ -129,7 +138,7 @@ inline Thread::Thread(void (* entry)(Tn ...), Tn ... an) : _link(this, (std::chr
         if (_id != 0) {
             _ready.insert(&_link);
         }
-        
+        _caller_of_join = nullptr;
         total_threads++;
         db<Thread>(INF) << "Thread " << this->_id << " criada\n";
     } else {

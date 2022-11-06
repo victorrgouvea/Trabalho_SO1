@@ -12,6 +12,7 @@ Thread Thread::_main;
 CPU::Context Thread::_main_context;
 Thread Thread::_dispatcher;
 Ordered_List<Thread> Thread::_ready;
+Ordered_List<Thread> Thread::_suspended;
 
 int Thread::switch_context(Thread * prev, Thread * next)
 {
@@ -27,8 +28,14 @@ void Thread::thread_exit (int exit_code)
 {
     db<Thread>(INF) << "Thread " << this->id() << " exit chamado\n";
     _state = FINISHING;
+    _exit_code = exit_code;
     total_threads--;
-    Thread::yield();
+    if (this->_caller_of_join != nullptr) {
+            db<Thread>(TRC) << "Thread " << this->id() << " is resuming...\n";
+            this->resume();
+    } else {
+        yield();
+    }
 } 
 
 Thread::~Thread() {
@@ -108,6 +115,32 @@ void Thread::yield() {
 
     db<Thread>(TRC) << "Método yield finalizado, retornando contexto para o dispatcher\n";
     switch_context(prev_running, _running);
+}
+
+int Thread::join() {
+    _caller_of_join = _running;
+    db<Thread>(TRC) << "Thread that called join: " << _caller_of_join->id() << " id!!.\n";
+    db<Thread>(TRC) << "Thread to wait for:  " << this->id() << " id!!.\n";
+    _caller_of_join->suspend();
+    return _exit_code;
+}
+
+void Thread::suspend() {
+    _state = SUSPENDED;
+    db<Thread>(TRC) << "Thread this id =  " << this->id() << " suspendida!!.\n";
+    Thread::_suspended.insert(&this->_link);
+    yield();
+}
+
+void Thread::resume() {
+    Thread * resume = _caller_of_join;
+    Thread::_suspended.remove(resume->_link.object());
+    resume->_state = READY;
+    if (resume->_id != 0) {
+        Thread::_ready.insert(&resume->_link);
+    }
+    db<Thread>(TRC) << "Thread " << resume->id() << " resumida.\n";
+    Thread::switch_context(this, _caller_of_join);
 }
 
 __END_API
