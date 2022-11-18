@@ -4,8 +4,8 @@
 # Compilador utilizado:
 CC = g++
 
-main: main.o main_class.o cpu.o system.o debug.o thread.o
-	$(CC) main.o main_class.o cpu.o system.o debug.o thread.o -o main
+main: main.o main_class.o cpu.o system.o debug.o thread.o semaphore.o
+	$(CC) main.o main_class.o cpu.o system.o debug.o thread.o semaphore.o -o main
 
 main.o: main.cc system.h main_class.h thread.h traits.h cpu.h debug.h list.h
 	$(CC) -c main.cc
@@ -24,6 +24,9 @@ debug.o: debug.cc debug.h traits.h
 
 thread.o: thread.cc thread.h cpu.h traits.h debug.h list.h
 	$(CC) -c thread.cc
+
+semaphore.o: semaphore.cc semaphore.h cpu.h thread.h traits.h debug.h list.h
+	$(CC) -c semaphore.cc
 
 clean:
 	rm *.o main

@@ -24,7 +24,8 @@ public:
         RUNNING,
         READY,
         SUSPENDED,
-        FINISHING
+        FINISHING,
+        WAITING
     };
 
     /*
@@ -104,6 +105,11 @@ public:
 
     void resume();
 
+    void sleep();
+
+    void wakeup();
+
+    Ready_Queue::Element * link() { return &_link; }
 
 private:
     int _id;

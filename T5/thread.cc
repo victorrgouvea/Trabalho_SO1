@@ -31,11 +31,13 @@ void Thread::thread_exit (int exit_code)
     _exit_code = exit_code;
     total_threads--;
     if (this->_caller_of_join != nullptr) {
-            db<Thread>(TRC) << "Thread " << this->id() << " is resuming...\n";
-            this->resume();
+        db<Thread>(TRC) << "Thread " << this->id() << " is resuming...\n";
+        _caller_of_join->resume();
+        switch_context(this, _caller_of_join);
     } else {
         yield();
     }
+
 } 
 
 Thread::~Thread() {
@@ -118,29 +120,47 @@ void Thread::yield() {
 }
 
 int Thread::join() {
-    _caller_of_join = _running;
-    db<Thread>(TRC) << "Thread that called join: " << _caller_of_join->id() << " id!!.\n";
-    db<Thread>(TRC) << "Thread to wait for:  " << this->id() << " id!!.\n";
-    _caller_of_join->suspend();
+    if (this->_state != FINISHING) {
+        _caller_of_join = _running;
+        db<Thread>(TRC) << "Thread that called join: " << _caller_of_join->id() << " id!!.\n";
+        db<Thread>(TRC) << "Thread to wait for:  " << this->id() << " id!!.\n";
+        _caller_of_join->suspend();
+    } else {
+        db<Thread>(TRC) << "Thread to wait for already finished\n";
+    }
     return _exit_code;
 }
 
 void Thread::suspend() {
     _state = SUSPENDED;
     db<Thread>(TRC) << "Thread this id =  " << this->id() << " suspendida!!.\n";
-    Thread::_suspended.insert(&this->_link);
+    if (this->_id != 0) {
+        Thread::_ready.remove(this);
+    }
+    Thread::_suspended.insert(&(this->_link));
     yield();
 }
 
 void Thread::resume() {
-    Thread * resume = _caller_of_join;
-    Thread::_suspended.remove(resume->_link.object());
-    resume->_state = READY;
-    if (resume->_id != 0) {
-        Thread::_ready.insert(&resume->_link);
+    Thread::_suspended.remove(this);
+    this->_state = READY;
+    if (this->_id != 0) {
+        Thread::_ready.insert(&(this->_link));
     }
-    db<Thread>(TRC) << "Thread " << resume->id() << " resumida.\n";
-    Thread::switch_context(this, _caller_of_join);
+    db<Thread>(TRC) << "Thread " << this->id() << " resumida.\n";
+}
+
+void Thread::sleep() {
+    db<Thread>(TRC) << "Thread " << running()->id() << " dormindo.\n";
+    _state = WAITING;
+    yield();
+}
+
+void Thread::wakeup() {
+    db<Thread>(TRC) << "Thread " << running()->id() << " acordada.\n";
+    _state = READY;
+    Thread::_ready.insert(&(this->_link));
+    yield();
 }
 
 __END_API
