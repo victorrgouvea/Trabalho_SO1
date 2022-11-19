@@ -33,10 +33,18 @@ void Thread::thread_exit (int exit_code)
     if (this->_caller_of_join != nullptr) {
         db<Thread>(TRC) << "Thread " << this->id() << " is resuming...\n";
         _caller_of_join->resume();
-        switch_context(this, _caller_of_join);
+        if (_caller_of_join->_id == 0) {
+            // Se a main thread é a caller of join damos switch context direto pois ela nunca esta na lista de ready
+            // E se estivesse ela teria a maior prioridade de qualquer forma
+            _caller_of_join->_state = RUNNING;
+            switch_context(this, _caller_of_join);
+        } else {
+            yield();
+        }
     } else {
         yield();
     }
+
 
 } 
 
@@ -108,7 +116,7 @@ void Thread::yield() {
 
     db<Thread>(TRC) << "Método yield chamado por "<< prev_running->id() << "\n";
     //Caso seja o main ou uma thread que terminou, não insere na lista de prontos nem atualiza a prioridade
-    if (prev_running->_state != FINISHING && prev_running != &_main) {
+    if (prev_running->_state != FINISHING && prev_running != &_main && prev_running->_state != SUSPENDED && prev_running->_state != WAITING) {
         int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
         prev_running->_link.rank(now);
         prev_running->_state = READY;
@@ -120,32 +128,28 @@ void Thread::yield() {
 }
 
 int Thread::join() {
-    if (this->_state != FINISHING) {
-        _caller_of_join = _running;
-        db<Thread>(TRC) << "Thread that called join: " << _caller_of_join->id() << " id!!.\n";
-        db<Thread>(TRC) << "Thread to wait for:  " << this->id() << " id!!.\n";
-        _caller_of_join->suspend();
-    } else {
-        db<Thread>(TRC) << "Thread to wait for already finished\n";
-    }
+    _caller_of_join = _running;
+    db<Thread>(TRC) << "Thread that called join: " << _caller_of_join->id() << " id!!.\n";
+    db<Thread>(TRC) << "Thread to wait for:  " << this->id() << " id!!.\n";
+    _caller_of_join->suspend();
     return _exit_code;
 }
 
 void Thread::suspend() {
+    if (_state == READY) {
+        _ready.remove(this);
+    }
     _state = SUSPENDED;
     db<Thread>(TRC) << "Thread this id =  " << this->id() << " suspendida!!.\n";
-    if (this->_id != 0) {
-        Thread::_ready.remove(this);
-    }
     Thread::_suspended.insert(&(this->_link));
     yield();
 }
 
 void Thread::resume() {
-    Thread::_suspended.remove(this);
-    this->_state = READY;
-    if (this->_id != 0) {
-        Thread::_ready.insert(&(this->_link));
+    Thread * resume = Thread::_suspended.remove(this)->object();
+    resume->_state = READY;
+    if (this-> _id != 0) {
+        _ready.insert(&(this->_link));
     }
     db<Thread>(TRC) << "Thread " << this->id() << " resumida.\n";
 }

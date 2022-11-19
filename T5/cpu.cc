@@ -34,26 +34,23 @@ int CPU::switch_context(Context *from, Context *to)
 }
 
 int CPU::finc(volatile int & number){
-    int val = 1;
-    int r;
+    int valor = 1;
+    int reg;
 
     asm(
        "lock\n\t"
-       "xadd %1, %0":"+m"( number), "=r"(r):"1"( val ):"memory", "cc");
+       "xadd %1, %0":"+m"( number), "=r"(reg):"1"(valor):"memory", "cc");
 
     return number;
 }
 
 int CPU::fdec(volatile int & number){
-    int val = -1;
-    int r;
+    int valor = -1;
+    int reg;
 
     asm(
        "lock\n\t"
-       "xadd %1, %0":
-       "+m"( number), "=r"(r):
-       "1"( val ):
-       "memory", "cc");
+       "xadd %1, %0":"+m"(number), "=r"(reg):"1"(valor):"memory", "cc");
 
     return number;
 }
