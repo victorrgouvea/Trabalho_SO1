@@ -106,7 +106,7 @@ public:
     void resume();
 
     void sleep();
-
+    void wakeup_all();
     void wakeup();
 
     Ready_Queue::Element * link() { return &_link; }

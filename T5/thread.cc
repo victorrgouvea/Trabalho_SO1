@@ -167,4 +167,10 @@ void Thread::wakeup() {
     yield();
 }
 
+void Thread::wakeup_all() {
+    db<Thread>(TRC) << "Thread " << running()->id() << " acordada.\n";
+    _state = READY;
+    Thread::_ready.insert(&(this->_link));
+}
+
 __END_API

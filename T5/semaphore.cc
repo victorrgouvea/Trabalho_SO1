@@ -5,13 +5,13 @@
 __BEGIN_API
 
 void Semaphore::p() {
-    if (fdec(valor) < 0) {
+    if (fdec(valor) < 1) {
         sleep();
     }
 }
 
 void Semaphore::v() {
-    if (finc(valor) < 1) {
+    if (finc(valor) > 0) {
         wakeup();
     }
 }
@@ -38,7 +38,8 @@ void Semaphore::wakeup_all() {
     Thread * acordada;
     while (_waiting.size() > 0) {
         acordada = _waiting.remove()->object();
-        acordada->wakeup();
+        acordada->wakeup_all();
     }
+    acordada->yield();
 }
 __END_API
