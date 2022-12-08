@@ -15,10 +15,8 @@
 
 int main() {
    srand(time(0));
-
    Engine shooty(800, 600, 60);
    shooty.init();
-   Thread thread_principalThread = new Thread()
    shooty.run();
 
    return 0;

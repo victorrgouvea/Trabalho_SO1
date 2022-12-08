@@ -5,13 +5,13 @@
 __BEGIN_API
 
 void Semaphore::p() {
-    if (fdec(valor) <= 0) {
+    if (fdec(valor) < 0) {
         sleep();
     }
 }
 
 void Semaphore::v() {
-    if (finc(valor) >= 1) {
+    if (finc(valor) < 1) {
         wakeup();
     }
 }
