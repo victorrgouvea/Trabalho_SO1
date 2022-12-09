@@ -7,6 +7,11 @@
  *
  * provides the declaration of the update function
  */
+
+#include "traits.h"
+
+__BEGIN_API
+
 class Updateable {
   public:
    /**
@@ -24,5 +29,7 @@ class Updateable {
     */
    //virtual bool inBound() = 0;
 };
+
+__END_API
 
 #endif

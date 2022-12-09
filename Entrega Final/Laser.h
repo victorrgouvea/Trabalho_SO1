@@ -5,6 +5,9 @@
 
 #include "Point.h"
 #include "Vector.h"
+#include "traits.h"
+
+__BEGIN_API
 
 class Laser {
   public:
@@ -21,5 +24,7 @@ class Laser {
   private:
    bool in_bound();
 };
+
+__END_API
 
 #endif

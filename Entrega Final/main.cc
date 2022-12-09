@@ -12,6 +12,9 @@
 #include <string>
 #include <iostream>
 #include "thread.h"
+#include "traits.h"
+
+__USING_API
 
 int main() {
    srand(time(0));

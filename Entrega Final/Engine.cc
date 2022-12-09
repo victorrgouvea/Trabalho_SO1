@@ -11,6 +11,8 @@
 
 #include "Timer.h"
 
+__BEGIN_API
+
 Engine::Engine(int w, int h, int fps) : _displayWidth(w), _displayHeight(h), 
 					_fps(fps),
 					_timer(NULL),
@@ -228,4 +230,4 @@ void Engine::loadSprites()
 
 }
 
-   
+__END_API

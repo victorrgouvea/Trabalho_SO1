@@ -15,6 +15,9 @@
 #include "Sprite.h"
 #include "Vector.h"
 #include "Action.h"
+#include "traits.h"
+
+__BEGIN_API
 
 // forward declarations
 class Menu;
@@ -82,7 +85,7 @@ class Engine {
 };
 
 
-
+__END_API
 
 
 #endif

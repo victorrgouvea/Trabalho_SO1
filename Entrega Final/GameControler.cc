@@ -21,6 +21,8 @@
 #include "CreepBomb.h"
 #include "Boss.h"
 
+__BEGIN_API
+
 const int GAME_OVER_WAIT_TIME = 100;
 const int HIGH_SCORE_DISPLAY_TIME = 200;
 const int WEAPON_DELAY_LASER = 6;
@@ -771,3 +773,5 @@ bool GameControler::doHitboxesIntersect(const Point& centre1, const int& size1,
    return (abs(centre1.x - centre2.x) < (size1 + size2) &&
 	   abs(centre1.y - centre2.y) < (size1 + size2));
 }
+
+__END_API

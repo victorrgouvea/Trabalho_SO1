@@ -11,6 +11,9 @@
 #include "Vector.h"
 #include "Background.h"
 #include "Score.h"
+#include "traits.h"
+
+__BEGIN_API
 
 // forward declarations
 struct Point;
@@ -142,5 +145,7 @@ class GameControler{
    
 
 };
+
+__END_API
 
 #endif

@@ -2,6 +2,8 @@
 
 #include <allegro5/allegro_primitives.h>
 
+__BEGIN_API
+
 Laser::Laser(Point p, ALLEGRO_COLOR c, Vector s)
 {
    centre = p;
@@ -35,3 +37,5 @@ bool Laser::in_bound() {
       return false;
    return true;
 }
+
+__END_API

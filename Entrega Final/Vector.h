@@ -15,6 +15,10 @@
  * @brief represents the change in position of x and y
  */
 
+#include "traits.h"
+
+__BEGIN_API
+
 class Point;
 struct Vector {
    double x;
@@ -48,5 +52,7 @@ struct Vector {
    void Angle(Point p, Point p2, double time);
    
 };
+
+__END_API
 
 #endif
