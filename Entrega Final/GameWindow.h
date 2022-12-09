@@ -14,6 +14,8 @@
 #include "Sprite.h"
 #include "Vector.h"
 #include "Drawable.h"
+#include "Enemy.h"
+#include "Projectile.h"
 
 __BEGIN_API
 
@@ -25,15 +27,21 @@ public:
     ~GameWindow();
     void run();
 
+    bool getFinish() { return _finish; }
+    void setFinish(bool condition) { this->_finish = condition; }
     void setPlayerShip(PlayerShip *playerShip) { _playerShip = playerShip; }
     void setKeyboard(Keyboard *keyBoard) { _keyBoard = keyBoard; }
-    void addDrawableItem(Drawable *item) { this->drawableItens.push_front(item); }
-    void removeDrawableItem(Drawable *item) { this->drawableItens.remove(item); }
+    void getEnemyList() { return enemies; }
+    void pushEnemyList(Enemy *enemy) { this->enemies.push_front(enemy); }
+    void removeEnemyList(Enemy *enemy) { this->enemies.remove(enemy); }
+    void pushProjectileList(Projectile *projectile) { this->projectile.push_front(projectile); }
+    void removeProjectileList(Projectile *projectile) { this->projectile.remove(projectile); }
 
 private:
-    // Baseado na logica do nosso jogo de poo 2, todos os sprites
-    // são adicionados a uma lista para ser desenhado
-    std::list<Drawable *> drawableItens;
+    
+
+    std::list<Enemy *> enemies;
+    std::list<Projectile *> projectiles;
 
     // Methods
     void init();
@@ -42,6 +50,8 @@ private:
     void drawBackground();
     void updateBackGround(double diffTime);
 
+    bool _finish;
+    
     // Window variables
     int _displayWidth;
     int _displayHeight;

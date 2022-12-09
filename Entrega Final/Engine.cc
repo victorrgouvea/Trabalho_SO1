@@ -7,37 +7,102 @@ Engine::Engine() {}
 
 Engine::~Engine() {}
 
+void Engine::setGameWindow(GameWindow *gameWindow) {
+   this->gameWindow = gameWindow;
+}
+
+void Engine::setPlayer(Player *player) {
+   this->player = player;
+}
+
 void Engine::run() {
-   while (get_finish() != false) {
-      collisionCheck();
+   while (gameWindow->getFinish() != false) {
+      playerCollisionCheck();  // checa se o player foi atingido por alguma coisa
+      enemyCollisionCheck();  // checa se algum inimigo foram atingidos pelo player
       objectsClean();
       Thread::yield();
    }
 }
 
-void Engine::playerCollisionCheck() {
+void Engine::playerCollisionCheck() { 
+   for (auto proj = this->touchedPlayer.begin(); proj != this->touchedPlayer.end();)
+    {
+        Projectile *projectile = *proj;
+        proj++;
 
+        if (playerHitCheck(projectile, this->player))
+        {
+            player->hit();
+            // Destrói o tiro
+            this->gameWindow->removeDrawableItem(projectile);
+            this->touchedPlayer.remove(projectile);
+            delete projectile;
+
+            if (player->isDead())
+            {
+                gameWindow->setFinish(true);
+                return;
+            }
+        }
+    }
 }
 
 void Engine::enemyCollisionCheck() {
+   for (auto listItem = this->playerShots.begin(); listItem != this->playerShots.end();)
+    {
+        // Pega o tiro
+        Projectile *playerShot = *listItem;
+        listItem++;
 
+        for (auto enemyItem = this->enemies.begin(); enemyItem != this->enemies.end();)
+        {
+            // Para cada um dos inimigos verifica se ele tomou o tiro
+            Enemy *enemy = *enemyItem;
+            enemyItem++;
+
+            if (this->verifyIfHit(playerShot, enemy))
+            {
+                // Remove o tiro do jogador da tela e destrói
+                this->_window->removeDrawableItem(playerShot);
+                this->playerShots.remove(playerShot);
+                delete playerShot;
+
+                enemy->hit();
+                if (enemy->isDead())
+                {
+                    this->_window->removeDrawableItem(enemy);
+                    this->enemies.remove(enemy);
+                    delete enemy;
+                }
+            }
+        }
+    }
 }
 
-bool Engine::playerHitCheck(Projectile *projectile, Hittable *hittable) {
-   Point projectilePos = projectile->getPosition();
-   Point hittablePos = hittable->getPosition();
-   int hittableSize = hittable->getSize();
+bool Engine::playerHitCheck(Projectile *projectile, Player *player) {
+   int tamanhoPlayer = player->getSize();
+   Point posicaoProjectile = projectile->getPosition();
+   Point posicaoPlayer = player->getPosition();
 
-   if (projectilePos.x > hittablePos.x - hittableSize &&
-        (projectilePos.x < hittablePos.x + hittableSize) &&
-        (projectilePos.y > hittablePos.y - hittableSize) &&
-        (projectilePos.y < hittablePos.y + hittableSize))
+   if (posicaoProjectile.x > posicaoPlayer.x - tamanhoPlayer &&
+        (posicaoProjectile.x < posicaoPlayer.x + tamanhoPlayer) &&
+        (posicaoProjectile.y > posicaoPlayer.y - tamanhoPlayer) &&
+        (posicaoProjectile.y < posicaoPlayer.y + tamanhoPlayer))
       return true;
    return false;
 }
 
-bool Engine::enemyHitCheck() {
-   
+bool Engine::enemyHitCheck(Projectile *projectile, Enemy *enemy) {
+   int tamanhoEnemy = enemy->getSize();
+   Point posicaoProjectile = projectile->getPosition();
+   Point posicaoEnemy = enemy->getPosition();
+
+   if (posicaoProjectile.x > posicaoEnemy.x - tamanhoEnemy &&
+        (posicaoProjectile.x < posicaoEnemy.x + tamanhoEnemy) &&
+        (posicaoProjectile.y > posicaoEnemy.y - tamanhoEnemy) &&
+        (posicaoProjectile.y < posicaoEnemy.y + tamanhoEnemy))
+      return true;
+   return false;
 }
 
 void Engine::objectsClean() {

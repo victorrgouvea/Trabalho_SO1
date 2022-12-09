@@ -13,7 +13,8 @@
 #include <list>
 #include "Point.h"
 #include "Projectile.h"
-#include "Hittable.h"
+#include "Enemy.h"
+#include "Player.h"
 
 __BEGIN_API
 
@@ -24,7 +25,12 @@ class Engine {
       Engine();
       ~Engine();
 
+      void setGameWindow(GameWindow *gameWindow);
+      void setPlayer(Player *player);
       void run();
+      void pushTouchedEnemy(Projectile *proj);
+      void pushTouchedPlayer(Projectile *proj);
+
       
    private:
 
@@ -34,9 +40,13 @@ class Engine {
       bool enemyHitCheck();
       void objectsClean();
 
-      bool _finish;
 
-      bool get_finish() { return _finish; }
+      GameWindow * gameWindow;
+      Player * player;
+      
+      // Listas que armazenam os projeteis que tocaram o jogador ou algum inimigo
+      std::list<Projectile *> touchedEnemy;
+      std::list<Projectile *> touchedPlayer;
 
 
    
