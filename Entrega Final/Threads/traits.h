@@ -14,7 +14,7 @@ class Thread;
 class System;
 class Debug;
 class Lists;
-
+class Engine;
 //declaração da classe Traits
 template<typename T>
 struct Traits {

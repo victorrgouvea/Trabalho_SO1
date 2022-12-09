@@ -76,6 +76,7 @@ void Engine::init() {
 // repeatedly call the state manager function until the _state is EXIT
 void Engine::run() {
    float prevTime = 0;
+   init()
    // main engine loop
    while (!_finish) {
       gameLoop(prevTime);
