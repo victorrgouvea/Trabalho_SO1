@@ -7,11 +7,11 @@
 #include "Threads/thread.h"
 #include "Threads/semaphore.h"
 
-#include "Window.h"
-#include "KeyBoard.h"
-#include "PlayerShip.h"
 #include "Collision.h"
 #include "GameConfigs.h"
+#include "GameInput.h"
+#include "GameWindow.h"
+#include "Player.h"
 
 __BEGIN_API
 
@@ -20,7 +20,10 @@ class MainThread
 public:
     MainThread() {}
     ~MainThread() {}
-
+    static PlayerShip *playerShipObj;
+    static Window *windowObj;
+    static Keyboard *kBoardObj;
+    static Collision *collisionObj;
 
     static void run(void *name)
     {
@@ -78,11 +81,6 @@ private:
     static Thread *windowThread;
     static Thread *keyboardThread;
     static Thread *collisionThread;
-
-    static PlayerShip *playerShipObj;
-    static Window *windowObj;
-    static Keyboard *kBoardObj;
-    static Collision *collisionObj;
 };
 
 __END_API

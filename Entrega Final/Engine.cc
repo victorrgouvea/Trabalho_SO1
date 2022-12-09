@@ -1,18 +1,51 @@
 #include "Engine.h"
 
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <stdexcept>
-#include <iostream>
-
-#include "Timer.h"
-
 __BEGIN_API
 
+
+Engine::Engine() {}
+
+Engine::~Engine() {}
+
+void Engine::run() {
+   while (get_finish() != false) {
+      collisionCheck();
+      objectsClean();
+      Thread::yield();
+   }
+}
+
+void Engine::playerCollisionCheck() {
+
+}
+
+void Engine::enemyCollisionCheck() {
+
+}
+
+bool Engine::playerHitCheck(Projectile *projectile, Hittable *hittable) {
+   Point projectilePos = projectile->getPosition();
+   Point hittablePos = hittable->getPosition();
+   int hittableSize = hittable->getSize();
+
+   if (projectilePos.x > hittablePos.x - hittableSize &&
+        (projectilePos.x < hittablePos.x + hittableSize) &&
+        (projectilePos.y > hittablePos.y - hittableSize) &&
+        (projectilePos.y < hittablePos.y + hittableSize))
+      return true;
+   return false;
+}
+
+bool Engine::enemyHitCheck() {
+   
+}
+
+void Engine::objectsClean() {
+
+}
+
+
+/*
 Engine::Engine(int w, int h, int fps) : _displayWidth(w), _displayHeight(h), 
 					_fps(fps),
 					_timer(NULL),
@@ -118,6 +151,9 @@ void Engine::gameLoop(float& prevTime) {
    }
 }
 
+
+  return act::action::NO_ACTION;
+}
 // update the game mode
 void Engine::update(double dt) {
    //Spaceship
@@ -153,34 +189,7 @@ void Engine::checkBoundary() {
       centre.y = 16;
 }
 
-act::action Engine::input(ALLEGRO_KEYBOARD_STATE& kb) {
- if (al_key_down(&kb, ALLEGRO_KEY_UP)) {
-     speed.y -= 250;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_RIGHT)) {
-     speed.x += 250;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_DOWN)) {
-     speed.y += 250;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_LEFT)) {
-     speed.x -= 250;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_1)) {
-     std::cout << "missel\n";
-     return act::action::FIRE_PRIMARY;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_SPACE)) {
-     std::cout << "tiro normal\n";
-     return act::action::FIRE_SECONDARY;
-  }
-  if (al_key_down(&kb, ALLEGRO_KEY_ESCAPE)) {
-     std::cout << "sair\n";
-     return act::action::QUIT_GAME;
-  }
 
-  return act::action::NO_ACTION;
-}
 
 void Engine::drawShip(std::shared_ptr<Sprite> sprite, int flags) {   
    sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
@@ -230,5 +239,5 @@ void Engine::loadSprites()
    al_destroy_path(path);
 
 }
-
+*/
 __END_API
