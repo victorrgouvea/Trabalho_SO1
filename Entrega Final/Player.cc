@@ -1,27 +1,25 @@
-include <stdexcept>
+#include <stdexcept>
 #include <iostream>
-
 #include "Player.h"
 #include "Laser.h"
 #include "GameInput.h"
 #include "MainThread.h"
-
 
 __BEGIN_API
 
 
 Player::Player()
 {
-	laserTimer = std::make_shared<Timer>(GameConfigs::fps);
-    laserDelay = 6;
-	missileTimer = std::make_shared<Timer>(GameConfigs::fps);
-    missileDelay = 25;
-	laserTimer->create();
-	missileTimer->create();
-	laserTimer->startTimer();
-	missileTimer->startTimer();
-    speed = Vector(0, 0);
-    loadSprites();
+  laserTimer = std::make_shared<Timer> (60);
+  laserDelay = 6;
+  missileTimer = std::make_shared<Timer> (60);
+  missileDelay = 25;
+  laserTimer->create();
+  missileTimer->create();
+  laserTimer->startTimer();
+  missileTimer->startTimer();
+  speed = Vector(0, 0);
+  loadSprites();
 }
 
 Player::~Player()
@@ -30,7 +28,7 @@ Player::~Player()
 }
 
 void Player::hit() {
-    this->life -= 1;
+    remainingLifes -= 1;
 }
 
 bool Player::alive() {
@@ -40,11 +38,11 @@ bool Player::alive() {
 void Player::fire(string fire_type) {
     if (fire_type == 'laser') {
         if (laserTimer->getCount() > laserDelay) {
-            Laser *laser new Laser(centre, color, 500, true);
+            Laser *laser = new Laser(centre, color, 500, true);
             // Trata de desenhar o sprite
-            MainThread::_collision->addPlayerShot(laser);
+            MainThread::Engine->addPlayerShot(laser);
             // Trata de calcular a colisão do tiro
-            MainThread::_window->addDrawableItem(laser);
+            MainThread::GameWindow->addDrawableItem(laser);
             laserTimer->srsTimer();
 	    }
     } else if (fire_type == 'missile') {
@@ -69,22 +67,22 @@ void Player::run()
 	while (!GameConfigs::finished)
 	{
 		// Não executa enquanto as referências não forem corretas
-		if (this->_window == nullptr || this->_collision == nullptr)
-			Thread::yield();
+		if (MainThread:_window == nullptr || MainThread:_collision == nullptr)
+			//Thread::yield();
 
-		this->processAction();
-		Thread::yield();
+		>processAction();
+		//Thread::yield();
 	}
 }
 
 void Player::draw()
 {
-	this->shipSprite->draw_region(this->row, this->col, 47.0, 40.0, this->shipPosition, 0);
+	playerSprite->draw_region(row, col, 47.0, 40.0, centre, 0);
 }
 
 void Player::update(double diffTime)
 {
-	centre = this->shipPosition + this->speed * diffTime;
+	centre =  centre + this->speed * diffTime;
 	updateShipAnimation(); // must happen before we reset our speed
 	speed = Vector(0, 0);	 // reset our speed
 	checkExceedingWindowLimit();
@@ -102,7 +100,7 @@ void Player::handleInput() {
   if (inputEvent == act::action::MOVE_DOWN) {
     speed.y += 250;
   }
-  if (inputEvent == act::action::MOVE_DOWN) {
+  if (inputEvent == act::action::MOVE_LEFT) {
     speed.x -= 250;
   }
   if (inputEvent == act::action::FIRE_SECONDARY) {

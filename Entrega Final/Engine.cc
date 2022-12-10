@@ -25,17 +25,17 @@ void Engine::run() {
 }
 
 void Engine::playerCollisionCheck() { 
-   for (auto proj = this->touchedPlayer.begin(); proj != this->touchedPlayer.end();)
+   for (auto proj = enemiesProj.begin(); proj != enemiesProj.end();)
     {
         Projectile *projectile = *proj;
         proj++;
 
-        if (playerHitCheck(projectile, this->player))
+        if (playerHitCheck(projectile, player))
         {
             player->hit();
             // Destrói o tiro
-            this->gameWindow->removeDrawableItem(projectile);
-            this->touchedPlayer.remove(projectile);
+            gameWindow->removeDrawableItem(projectile);
+            enemiesProj.remove(projectile);
             delete projectile;
 
             if (player->isDead())
@@ -48,30 +48,27 @@ void Engine::playerCollisionCheck() {
 }
 
 void Engine::enemyCollisionCheck() {
-   for (auto listItem = this->playerShots.begin(); listItem != this->playerShots.end();)
+   for (auto proj = playerProj.begin(); proj != playerProj.end();)
     {
-        // Pega o tiro
-        Projectile *playerShot = *listItem;
-        listItem++;
+        Projectile *projectile = *proj;
+        proj++;
 
-        for (auto enemyItem = this->enemies.begin(); enemyItem != this->enemies.end();)
+        for (auto obj = gameWindow->getEnemyList().begin(); obj != gameWindow->getEnemyList().end();)
         {
-            // Para cada um dos inimigos verifica se ele tomou o tiro
-            Enemy *enemy = *enemyItem;
-            enemyItem++;
+            Enemy *enemy = *obj;
+            obj++;
 
-            if (this->verifyIfHit(playerShot, enemy))
+            if (enemyHitCheck(projectile, enemy))
             {
-                // Remove o tiro do jogador da tela e destrói
-                this->_window->removeDrawableItem(playerShot);
-                this->playerShots.remove(playerShot);
-                delete playerShot;
+                gameWindow->removeDrawableItem(projectile);
+                playerProj.remove(projectile);
+                delete playerProj;
 
                 enemy->hit();
                 if (enemy->isDead())
                 {
-                    this->_window->removeDrawableItem(enemy);
-                    this->enemies.remove(enemy);
+                    gameWindow->removeDrawableItem(enemy);
+                    gameWindow->getEnemyList().remove(enemy);
                     delete enemy;
                 }
             }
@@ -103,10 +100,6 @@ bool Engine::enemyHitCheck(Projectile *projectile, Enemy *enemy) {
         (posicaoProjectile.y < posicaoEnemy.y + tamanhoEnemy))
       return true;
    return false;
-}
-
-void Engine::objectsClean() {
-
 }
 
 

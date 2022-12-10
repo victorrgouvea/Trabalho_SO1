@@ -4,42 +4,37 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
-
 #include "GameWindow.h"
-#include "include/GameConfigs.h"
+
 
 __BEGIN_API
 
-GameWindow::GameWindow() { this->init(); }
-
-GameWindow::GameWindow(int width, int height, int fps) : _displayWidth(width), _displayHeight(height), _fps(fps) { this->init(); }
-
 GameWindow::~GameWindow()
 {
-    if (this->_timer != NULL)
-        al_destroy_timer(this->_timer);
-    if (this->_eventQueue != NULL)
-        al_destroy_event_queue(this->_eventQueue);
-    if (this->_display != NULL)
-        al_destroy_display(this->_display);
+     if (_timer != NULL)
+         al_destroy_timer(_timer);
+     if (_eventQueue != NULL)
+         al_destroy_event_queue(_eventQueue);
+     if (_display != NULL)
+         al_destroy_display(_display);
 
-    bgSprite.reset();
+     bgSprite.reset();
 }
 
 void GameWindow::run()
 {
     init();
-    while (!GameConfigs::finished)
+    while (isGameRunning)
     {
         ALLEGRO_EVENT event;
-        al_wait_for_event(this->_eventQueue, &event);
+        al_wait_for_event(_eventQueue, &event);
         if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
-            GameConfigs::finished = true;
+            eraseData = true;
             return;
         }
         if (event.type == ALLEGRO_EVENT_TIMER)
-            this->draw();
+            draw();
             Thread::yield();
         }
 }
@@ -49,21 +44,22 @@ void GameWindow::draw()
     if (al_is_event_queue_empty(_eventQueue))
     {
         float currentTime = al_current_time();
-        double diffTime = currentTime - this->previousTime;
-        this->previousTime = currentTime;
-
-        // Update e draw
-        this->updateBackGround(diffTime);
+        double diffTime = currentTime - previousTime;
+        previousTime = currentTime;
+        updateBackGround(diffTime);
         bgSprite->draw_parallax_background(bgMid.x, 0);
 
-        if (this->_playerShip != nullptr)
+        if (MainThread::playerShipObj != nullptr)
         {
-            this->_playerShip->update(diffTime);
-            this->_playerShip->draw();
+            MainThread::playerShipObj->update(diffTime);
+            MainThread::playerShipObj->draw();
         }
-
+        for (auto item = spritesToDraw->getEnemyList().begin(); obj != gameWindow->getEnemyList().end();)
+        {
+            Enemy *enemy = *obj;
+            obj++;
         // Para cada item para desenhar faz update, desenha e caso já tenha terminado então coloca numa outra lista para remover
-        for (auto listItem = this->drawableItens.begin(); listItem != this->drawableItens.end();)
+        for (int i = 0; i < drawableItens.begin(); listItem != drawableItens.end();)
         {
             Drawable *drawableItem = *listItem;
             listItem++; // Já atualiza o ponteiro para o próximo
@@ -78,7 +74,7 @@ void GameWindow::draw()
 
 void GameWindow::updateBackGround(double dt)
 {
-    this->bgMid = this->bgMid + this->bgSpeed * dt;
+    bgMid = bgMid + bgSpeed * dt;
     if (bgMid.x >= 800)
         bgMid.x = 0;
 }
@@ -105,7 +101,7 @@ void GameWindow::init()
     al_init_image_addon();
 
     // initialize our timers
-    if ((this->_timer = al_create_timer(1.0 / this->_fps)) == NULL)
+    if ((_timer = al_create_timer(1.0 / _fps)) == NULL)
     {
         std::cout << "error, could not create timer\n";
         exit(1);
@@ -118,11 +114,11 @@ void GameWindow::init()
     }
 
     // register our allegro _eventQueue
-    al_register_event_source(this->_eventQueue, al_get_display_event_source(this->_display));
-    al_register_event_source(this->_eventQueue, al_get_timer_event_source(this->_timer));
-    al_start_timer(this->_timer);
+    al_register_event_source(_eventQueue, al_get_display_event_source(_display));
+    al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
+    al_start_timer(_timer);
 
-    this->loadSprites();
+    loadSprites();
 }
 
 void GameWindow::loadSprites()

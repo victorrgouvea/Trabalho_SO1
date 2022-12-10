@@ -4,7 +4,6 @@
 #include <memory>
 #include "Threads/thread.h"
 #include "Threads/traits.h"
-
 #include "GameInput.h"
 #include "Sprite.h"
 #include "Vector.h"
@@ -12,28 +11,24 @@
 #include "Point.h"
 #include "GameWindow.h"
 #include "Laser.h"
-#include "Missile.h"
 #include "Timer.h"
-#include "Hittable.h"
-#include "Collision.h"
-#include <string>
+#include "Engine.h"
+#include <string.h>
 
 __BEGIN_API
 
 class Collision;
 
-class Player : public Hittable
-{
+class Player {
 
 public:
 	Player();
 	~Player();
 
-	void setWindowReference(Window *window) { this->_window = window; }
-	void setCollisionReference(Collision *collision) { this->_collision = collision; }
+	
 	void run();
 	void draw();
-	void hit(int damage);
+	void hit();
 	bool alive();
 	bool isOutside();
 	void update(double diffTime);
@@ -53,9 +48,6 @@ private:
     int laserDelay;
 	int missileDelay;
     int remainingLifes = 3;
-	// Objects variables
-	Window *_window;
-	Collision *_collision;
 
 	// Draw information
 	std::shared_ptr<Sprite> playerSprite;

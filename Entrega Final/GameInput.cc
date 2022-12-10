@@ -22,7 +22,7 @@ GameInput::GameInput()
 
 void GameInput::run()
 {
-    while (!GameConfigs::finished)
+    while (MainThread::GameWindow.>get)
     {
         al_get_keyboard_state(&inputState);
         Thread::yield();
@@ -48,7 +48,7 @@ act::action GameInput::getInputEvent() {
   if (al_key_down(&inputState, ALLEGRO_KEY_1)) {
      return act::action::FIRE_SECONDARY;
   }
-
+   return act::action::NO_ACTION;
 }
 
 __END_API

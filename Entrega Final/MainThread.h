@@ -7,8 +7,7 @@
 #include "Threads/thread.h"
 #include "Threads/semaphore.h"
 
-#include "Collision.h"
-#include "GameConfigs.h"
+#include "Engine.h"
 #include "GameInput.h"
 #include "GameWindow.h"
 #include "Player.h"

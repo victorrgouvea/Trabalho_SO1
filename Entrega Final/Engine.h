@@ -28,8 +28,8 @@ class Engine {
       void setGameWindow(GameWindow *gameWindow);
       void setPlayer(Player *player);
       void run();
-      void pushTouchedEnemy(Projectile *proj);
-      void pushTouchedPlayer(Projectile *proj);
+      void pushEnemiesProj(Projectile *proj);
+      void pushPlayerProj(Projectile *proj);
 
       
    private:
@@ -45,8 +45,8 @@ class Engine {
       Player * player;
       
       // Listas que armazenam os projeteis que tocaram o jogador ou algum inimigo
-      std::list<Projectile *> touchedEnemy;
-      std::list<Projectile *> touchedPlayer;
+      std::list<Projectile *> enemiesProj;
+      std::list<Projectile *> playerProj;
 
 
    

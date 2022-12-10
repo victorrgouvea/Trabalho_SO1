@@ -9,8 +9,8 @@
 #include "Threads/thread.h"
 #include "Threads/traits.h"
 
-#include "PlayerShip.h"
-#include "KeyBoard.h"
+#include "Player.h"
+#include "GameInput.h"
 #include "Sprite.h"
 #include "Vector.h"
 #include "Drawable.h"
@@ -22,28 +22,30 @@ __BEGIN_API
 class GameWindow
 {
 public:
-    GameWindow();
-    GameWindow(int width, int height, int fps);
+    GameWindow(int width, int height, int fps) : _displayWidth(width), _displayHeight(height), _fps(fps) {init();};
     ~GameWindow();
     void run();
-
+    bool getGameRunning() {return isGameRunning;}
+    bool setGameRunning(bool valor) {isGameRunning = valor;}
     bool getFinish() { return _finish; }
     void setFinish(bool condition) { this->_finish = condition; }
-    void setPlayerShip(PlayerShip *playerShip) { _playerShip = playerShip; }
-    void setKeyboard(Keyboard *keyBoard) { _keyBoard = keyBoard; }
-    void getEnemyList() { return enemies; }
-    void pushEnemyList(Enemy *enemy) { this->enemies.push_front(enemy); }
-    void removeEnemyList(Enemy *enemy) { this->enemies.remove(enemy); }
-    void pushProjectileList(Projectile *projectile) { this->projectile.push_front(projectile); }
-    void removeProjectileList(Projectile *projectile) { this->projectile.remove(projectile); }
+    std::list<Drawable *> getDrawList() { return spritesToDraw; }
+    void pushSprite(Drawable *sprite);
+    void removeSprite(Drawable *sprite);
 
+    // Por algum motivo o compilador não deixa definir elas no ,cc
+    void pushSprite(Drawable *sprite)
+    {
+        spritesToDraw.push_front(sprite);
+    }       
+    void removeSprite(Drawable *sprite)
+    { 
+        spritesToDraw.remove(sprite); 
+    }
+ 
 private:
-    
-
-    std::list<Enemy *> enemies;
-    std::list<Projectile *> projectiles;
-
     // Methods
+    std::list<Drawable *> spritesToDraw;
     void init();
     void draw();
     void loadSprites();
@@ -51,16 +53,12 @@ private:
     void updateBackGround(double diffTime);
 
     bool _finish;
-    
+    bool eraseData;
     // Window variables
     int _displayWidth;
     int _displayHeight;
     int _fps;
-
-    // Game object
-    PlayerShip *_playerShip;
-    Keyboard *_keyBoard;
-
+    bool isGameRunning;
     // Time variables
     float previousTime;
 

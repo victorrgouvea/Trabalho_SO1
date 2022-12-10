@@ -7,7 +7,7 @@
 #include <string>
 #include "Threads/thread.h"
 #include "Threads/traits.h"
-
+#include "MainThread.h"
 #include "Sprite.h"
 #include "Vector.h"
 #include "Action.h"
