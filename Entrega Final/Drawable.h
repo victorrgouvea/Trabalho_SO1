@@ -9,6 +9,7 @@
  */
 #include "Point.h"
 #include "traits.h"
+#include <string.h>
 
 __BEGIN_API
 
@@ -25,6 +26,8 @@ class Drawable {
   virtual bool in_bound() = 0;
   virtual int getSize() = 0;
   virtual Point getPosition() = 0;
+  virtual std::string classType() = 0;
+  ALLEGRO_COLOR color;
 };
 
 __END_API

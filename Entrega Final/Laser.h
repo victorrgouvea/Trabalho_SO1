@@ -18,7 +18,7 @@ __BEGIN_API
 
 class Laser: public Projectile {
   public:
-   Laser (Point p, ALLEGRO_COLOR c, Vector s);   
+   Laser (Point p, ALLEGRO_COLOR c, Vector s, bool dono);   
    ~Laser();
    Point centre;
    ALLEGRO_COLOR color;
@@ -29,8 +29,10 @@ class Laser: public Projectile {
    bool in_bound();
    bool getAlive() { return alive; }
    Point getPosition() { return centre; }
-	 int getSize() { return 16; } 
-   void hit() {};
+	 int getSize() { return 3; } 
+   void hit() { alive = false; }
+   std::string classType() {return "proj";}
+   bool do_player;
 
   private:
    bool alive;

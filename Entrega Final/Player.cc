@@ -11,6 +11,7 @@ __BEGIN_API
 
 Player::Player()
 {
+  size = 16;
   color = al_map_rgb(150, 0, 0);
   laserTimer = std::make_shared<Timer> (60);
   laserDelay = 6;
@@ -40,17 +41,17 @@ void Player::hit() {
 void Player::fire(std::string fire_type) {
     if (fire_type == "laser") {
         if (laserTimer->getCount() > laserDelay) {
-            Laser *laser = new Laser(centre, al_map_rgb(150, 0, 0), Vector(500, 0));
-            MainThread::engine->pushPlayerProj(laser);
-            MainThread::gameWindow->addProjectile(laser);
+            Laser *laser = new Laser(centre, al_map_rgb(150, 0, 0), Vector(500, 0), true);
+            MainThread::gameWindow->addSprite(laser);
+            MainThread::engine->addProj(laser);
             laserTimer->srsTimer();
 	    }
     
     } else if (fire_type == "missile") {
         if (missileTimer->getCount() > missileDelay) {
             Missile *missile = new Missile(centre, al_map_rgb(150, 0, 0), Vector(500, 0), true);
-            MainThread::engine->pushPlayerProj(missile);
-            MainThread::gameWindow->addProjectile(missile);
+            MainThread::gameWindow->addSprite(missile);
+            MainThread::engine->addProj(missile);
             missileTimer->srsTimer();
 	    }
     }
@@ -62,7 +63,6 @@ void Player::run()
 	{
 		if (MainThread::engine == nullptr)
 			Thread::yield();
-  
 		handleInput();
 		Thread::yield();
 	}
@@ -154,7 +154,7 @@ void Player::loadSprites()
 
 	// sprites
 	playerSprite = std::make_shared<Sprite>("Sprite2.png");
-
+   MainThread::gameWindow->addSprite(this);
 	// delete path
 	al_destroy_path(path);
 }

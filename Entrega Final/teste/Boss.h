@@ -17,35 +17,38 @@ __BEGIN_API
 class Boss : public Enemy
 {
 public:
-    Boss(Point point, Vector vector, std::shared_ptr<Sprite> bossSprites);
+    Boss(Point point, Vector vector, std::shared_ptr<Sprite> bossSprite);
+
 
     void run();
     bool canFire() { return this->_canFire; }
     void draw();
     void attack();
+    void loadAssets();
     void update(double diffTime);
     void hit(int damage);
     bool isOutside();
     bool isDead();
     ALLEGRO_COLOR getColor() { return this->color; }
-    int getSize();
+    int getSize() { return size; };
+    void updateFrame();
 
 private:
-    static int BOSS_LIFE;
-
-    // Logic
-    bool _canFire;
-    void updateSprite();
-    int life;
-    int fireSpeed;
-    int size;
-    bool invincible;
-    int spritesIndex;
-    std::shared_ptr<Timer> shotsTimer;
+    Point point;
+    Vector vector;
+    std::shared_ptr<Timer> projectilesTimer;
+    std::shared_ptr<Timer> spawnTimer;
     std::shared_ptr<Sprite> bossSprites;
+    int spriteSheetIndex;
     ALLEGRO_COLOR color;
     int row;
     int col;
+    int size;
+    int shotSpeed;
+    int lifes;
+    int baseHp;
+    bool canFire;
+    bool targatable;
 };
 
 __END_API

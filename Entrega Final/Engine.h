@@ -26,27 +26,47 @@ class Engine {
    public:
       Engine();
       ~Engine();
-
+      void checkCollisionOnEnemies() ;
+      void checkCollidingEnemyWithPlayer();
+      void checkCollisionOnPlayer();
+      bool doColorsMatch(const ALLEGRO_COLOR& a, const ALLEGRO_COLOR& b);
+      bool isPointBoxCollision(const Point& p1, const Point& p2, const int& s2);
+      bool doHitboxesIntersect(const Point& centre1, const int& size1,
+				 const Point& centre2, const int& size2);
       void run();
-      void pushEnemiesProj(Drawable *proj);
-      void pushPlayerProj(Drawable *proj);
-      void removeEnemiesProj(Drawable *proj) { enemiesProj.remove(proj); }
-      void removePlayerProj(Drawable *proj) { playerProj.remove(proj); }
-      
+      void addEnemy(Enemy * sprite) {
+         enemiesToCheck.push_front(sprite);
+      }
+      void removeEnemy(Enemy * sprite) {
+         enemiesToCheck.remove(sprite);
+      }
+      void addProj(Projectile * sprite) {
+         projToCheck.push_front(sprite);
+      }
+      void removeProj(Projectile * sprite) {
+         projToCheck.remove(sprite);
+      }
+      void addDeadEnemy(Enemy * sprite) {
+         deadEnemies.push_front(sprite);
+      }
+      void removeDeadEnemy(Enemy * sprite) {
+         deadEnemies.remove(sprite);
+      }
+      void addDeadProj(Projectile * sprite) {
+         deadProj.push_front(sprite);
+      }
+      void removeDeadProj(Projectile * sprite) {
+         deadProj.remove(sprite);
+      }
+
    private:
+      std::list<Enemy *> enemiesToCheck;
+      std::list<Projectile *> projToCheck;
+      std::list<Enemy *> deadEnemies;
+      std::list<Projectile *> deadProj;
+      void spriteCollisionCheck();
+      bool hitCheck(Drawable *sprite1, Drawable *sprite2);
 
-      void playerCollisionCheck();
-      void enemyCollisionCheck();
-      bool playerHitCheck(Drawable *projectile);
-      bool enemyHitCheck(Drawable *projectile, Drawable *enemy);
-
-
-      // Listas que armazenam os projeteis
-      std::list<Drawable *> enemiesProj;
-      std::list<Drawable *> playerProj;
-
-
-   
 };
 
 __END_API

@@ -24,10 +24,10 @@ class Projectile : public Drawable {
    virtual int getSize() = 0;
    virtual Point getPosition() = 0;
    bool live;
+  ALLEGRO_COLOR color;
 
    private:
       Point centre;
-      ALLEGRO_COLOR color;
       Vector speed;
    
 };

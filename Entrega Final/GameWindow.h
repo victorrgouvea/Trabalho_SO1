@@ -27,32 +27,23 @@ public:
     void run();
     bool getGameRunning() {return isGameRunning;}
     void setGameRunning(bool valor) {isGameRunning = valor;}
-    std::list<Drawable *> getEnemyList() { return enemyToDraw; }
-    std::list<Drawable *> getProjectileList() { return projectToDraw; }
+    std::list<Drawable *> getSpriteList() { return spriteToDraw; }
     void drawLives();
+    void drawSprite();
     // Por algum motivo o compilador não deixa definir elas no ,cc
-    void addEnemy(Drawable *enemy)
+    void addSprite(Drawable *sprt)
     {
-        enemyToDraw.push_front(enemy);
+        spriteToDraw.push_front(sprt);
     }       
-    void removeEnemy(Drawable *enemy)
+    void removeSprite(Drawable *sprt)
     { 
-        enemyToDraw.remove(enemy); 
-    }
-    void addProjectile(Drawable *projectile)
-    {
-        projectToDraw.push_front(projectile);
-    }       
-    void removeProjectile(Drawable *projectile)
-    { 
-        projectToDraw.remove(projectile); 
+        spriteToDraw.remove(sprt); 
     }
     int getWidth() {return _displayWidth;}
     int getHeight() {return _displayHeight;}
 private:
     // Methods
-    std::list<Drawable *> enemyToDraw;
-    std::list<Drawable *> projectToDraw;
+    std::list<Drawable *> spriteToDraw;
     void init();
     void drawEnemy();
     void drawProject();

@@ -34,6 +34,7 @@ public:
     void fire();
     void kill() {};
     Point getPosition() { return centre; }
+    std::string classType() { return "roxo"; }
 
 private:
     // Logic

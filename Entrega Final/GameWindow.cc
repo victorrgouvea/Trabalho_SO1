@@ -26,7 +26,7 @@ void GameWindow::run()
     
     init();
     while (isGameRunning)
-    {
+    {        
         if (MainThread::player== nullptr)
         {
             Thread::yield();
@@ -40,13 +40,12 @@ void GameWindow::run()
             return;
         }
         if (event.type == ALLEGRO_EVENT_TIMER)
-            drawLives();
-            drawEnemy();
-            //drawProject();
+            //drawLives();
+            drawSprite();
             Thread::yield();
         }
 }
-
+/*
 void GameWindow::drawLives() {
    Point centre(_displayWidth-70, _displayWidth-50);
    if (MainThread::player->getLives() > 0) {
@@ -62,7 +61,9 @@ void GameWindow::drawLives() {
 			al_map_rgb(0, 255, 0) , 5);
    } 
 }
-void GameWindow::drawEnemy()
+*/
+
+void GameWindow::drawSprite()
 {
     if (al_is_event_queue_empty(_eventQueue))
     {
@@ -71,26 +72,18 @@ void GameWindow::drawEnemy()
         previousTime = timeNow;
         updateBackGround(newTime);
         bgSprite->draw_parallax_background(bgMid.x, 0);
-
+        /*
         if (MainThread::player!= nullptr)
         {
             MainThread::player->update(newTime);
             MainThread::player->draw();
         }
-
-        for (auto iter = enemyToDraw.begin(); iter != enemyToDraw.end();)
+        */
+        for (auto iter = spriteToDraw.begin(); iter != spriteToDraw.end();)
         {
+            Drawable *item = *iter;
+            iter++;
             
-            Drawable *item = *iter;
-            iter++;
-            item->update(newTime);
-            item->draw();
-        }
-
-        for (auto iter = projectToDraw.begin(); iter != projectToDraw.end();)
-        {
-            Drawable *item = *iter;
-            iter++;
             item->update(newTime);
             item->draw();
         }
@@ -98,26 +91,6 @@ void GameWindow::drawEnemy()
         al_flip_display();
     }
 }
-
-void GameWindow::drawProject()
-{
-    if (al_is_event_queue_empty(_eventQueue))
-    {
-        float currentTime = al_current_time();
-        double diffTime = currentTime - previousTime;
-        previousTime = currentTime;
-        updateBackGround(diffTime);
-        bgSprite->draw_parallax_background(bgMid.x, 0);
-
-        if (MainThread::player!= nullptr)
-        {
-            MainThread::player->update(diffTime);
-            MainThread::player->draw();
-        }
-        al_flip_display();
-    }
-}
-
 
 void GameWindow::updateBackGround(double dt)
 {

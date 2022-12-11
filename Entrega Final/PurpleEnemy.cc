@@ -29,13 +29,10 @@ void PurpleEnemy::hit() {
 }
 
 bool PurpleEnemy::in_bound() {
-    return centre.x > -1 *(size + size/2);
+    return centre.x > -200;
 }
 
 PurpleEnemy::~PurpleEnemy() {
-   MainThread::purpleEnemy->getShips().remove(this);
-   MainThread::gameWindow->removeEnemy(this);
-
 }
 
 void PurpleEnemy::draw() {
@@ -44,7 +41,7 @@ void PurpleEnemy::draw() {
    }
    else {
       if (deathSpriteIndex < 5) {
-       deathAnim();
+       //deathAnim();
       }
    }      
 }
@@ -52,14 +49,11 @@ void PurpleEnemy::draw() {
 void PurpleEnemy::fire() {
     if (fireDelay->getCount() > fireSpeed) {
         fireDelay->srsTimer();
-        Laser *laser1 = new Laser(centre, color, speed + Vector(-150, 40));
-        Laser *laser2 = new Laser(centre, color, speed + Vector(-150, -40));
+        Laser *laser1 = new Laser(centre, color, speed + Vector(-150, 40), false);
+        Laser *laser2 = new Laser(centre, color, speed + Vector(-150, -40), false);
 
-        MainThread::engine->pushEnemiesProj(laser1);
-        MainThread::engine->pushEnemiesProj(laser2);
-
-        MainThread::gameWindow->addProjectile(laser1);
-        MainThread::gameWindow->addProjectile(laser2);
+        MainThread::gameWindow->addSprite(laser1);
+        MainThread::gameWindow->addSprite(laser2);
     }
 }
 
@@ -69,9 +63,7 @@ void PurpleEnemy::update(double dt) {
 				
    if (!in_bound()) {
       alive = false;
-   }
-   if (!alive) {
-    delete this;
+      return;
    }
    // check y bound and adjust if out
    if (centre.y > 600 - size && speed.y > 0)  

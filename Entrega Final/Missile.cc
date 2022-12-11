@@ -45,8 +45,6 @@ void Missile::loadSprites()
 void Missile::update(double dt) {
    
    centre = centre + speed * dt;
-    if (!in_bound())
-       live = false;
 }
 bool Missile::in_bound()
 {

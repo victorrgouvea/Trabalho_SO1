@@ -28,8 +28,8 @@ public:
     static void run(void *name)
     {
         windowT = new Thread(windowInit);
-        playerT = new Thread(playerInit);
         inputT = new Thread(inputInit);
+        playerT = new Thread(playerInit);
         engineT  = new Thread(engineInit);
         purpleEnemyT = new Thread(purpleEnemyInit);
         playerT->join();

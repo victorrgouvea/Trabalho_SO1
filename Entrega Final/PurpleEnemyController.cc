@@ -23,9 +23,9 @@ void PurpleEnemyController::run()
             Thread::yield();
         } else {
             if (timerSpawn->getCount() > delaySpawn) {
-                this->createShips();
+                createShips();
             }
-            this->handleShips();
+            handleShips();
             Thread::yield();
         }
     }
@@ -44,7 +44,7 @@ void PurpleEnemyController::loadAssets()
 
 void PurpleEnemyController::handleShips()
 {
-    for (auto item = this->ships.begin(); item != this->ships.end(); item++)
+    for (auto item = ships.begin(); item != ships.end(); item++)
     {
         PurpleEnemy *ship = *item;
         ship->fire();
@@ -67,14 +67,20 @@ void PurpleEnemyController::createShips()
     ships.push_front(purpleEnemy5);
     ships.push_front(purpleEnemy6);
     ships.push_front(purpleEnemy7);
-
-    MainThread::gameWindow->addEnemy(purpleEnemy1);
-    MainThread::gameWindow->addEnemy(purpleEnemy2);
-    MainThread::gameWindow->addEnemy(purpleEnemy3);
-    MainThread::gameWindow->addEnemy(purpleEnemy4);
-    MainThread::gameWindow->addEnemy(purpleEnemy5);
-    MainThread::gameWindow->addEnemy(purpleEnemy6);
-    MainThread::gameWindow->addEnemy(purpleEnemy7);
+    MainThread::engine->addEnemy(purpleEnemy1);
+    MainThread::engine->addEnemy(purpleEnemy2);
+    MainThread::engine->addEnemy(purpleEnemy3);
+    MainThread::engine->addEnemy(purpleEnemy4);
+    MainThread::engine->addEnemy(purpleEnemy5);
+    MainThread::engine->addEnemy(purpleEnemy6);
+    MainThread::engine->addEnemy(purpleEnemy7);
+    MainThread::gameWindow->addSprite(purpleEnemy1);
+    MainThread::gameWindow->addSprite(purpleEnemy2);
+    MainThread::gameWindow->addSprite(purpleEnemy3);
+    MainThread::gameWindow->addSprite(purpleEnemy4);
+    MainThread::gameWindow->addSprite(purpleEnemy5);
+    MainThread::gameWindow->addSprite(purpleEnemy6);
+    MainThread::gameWindow->addSprite(purpleEnemy7);
 
 
     timerSpawn->srsTimer();

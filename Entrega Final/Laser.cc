@@ -4,8 +4,9 @@
 
 __BEGIN_API
 
-Laser::Laser(Point p, ALLEGRO_COLOR c, Vector s)
+Laser::Laser(Point p, ALLEGRO_COLOR c, Vector s, bool dono)
 {  
+   do_player = dono;
    centre = p;
    color = c;
    speed =s;
@@ -18,9 +19,9 @@ Laser::~Laser() {
 
 void Laser::update(double dt) {
    centre = centre + speed * dt;
-    if (!in_bound())
-       alive = false;
+
 }
+
 bool Laser::in_bound()
 {
 	if ((centre.x > MainThread::gameWindow->getWidth()) ||
@@ -30,6 +31,7 @@ bool Laser::in_bound()
 			return true;
   return false;
 };
+
 void Laser::draw() {
    Point tracer = centre + speed * (0.05);  
    al_draw_line(centre.x, centre.y,

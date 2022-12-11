@@ -9,7 +9,7 @@
 #define MISSILE_H
 
 #include <allegro5/allegro.h>
-
+#include <string.h>
 #include <memory>
 #include <vector>
 #include "MainThread.h"
@@ -33,12 +33,14 @@ class Missile : public Projectile {
    void loadSprites();
    bool in_bound();
    Point getPosition() { return centre; }
-	 int getSize() { return 16; } 
+	 int getSize() { return 3; } 
    double angle;
    std::vector<std::shared_ptr<Sprite>> sprites;
    int currentSpriteIndex;
    bool getAlive() { return alive; }
    void hit() {}
+   std::string classType() { return "proj"; }
+
   private:
    bool alive;
 };

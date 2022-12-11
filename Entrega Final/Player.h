@@ -38,20 +38,20 @@ public:
 	bool in_bound();
 	int getLives() { return remainingLifes; };
 	Point getPosition() { return centre; }
-	int getSize() { return playerSize; }  // Retorna o tamanho da nave hardcoded
+	int getSize() { return size; }  // Retorna o tamanho da nave hardcoded
 	bool getAlive() { return alive; }
+	ALLEGRO_COLOR color;
 
 private:
 
-	ALLEGRO_COLOR color;
 	std::shared_ptr<Timer> laserTimer;
 	std::shared_ptr<Timer> missileTimer;
     int laserDelay;
 	bool alive;
 	int missileDelay;
     int remainingLifes = 3;
-	int playerSize = 16;
-
+	int size;
+	std::string classType() { return "player"; }
 	// Draw information
 	std::shared_ptr<Sprite> playerSprite;
 	Point centre;       /**< ship position */
