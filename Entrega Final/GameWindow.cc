@@ -98,10 +98,6 @@ void GameWindow::drawProject()
             MainThread::player->update(diffTime);
             MainThread::player->draw();
         }
-
-        // Para cada item para desenhar faz update, desenha e caso já tenha terminado então coloca numa outra lista para remover
-        
-
         al_flip_display();
     }
 }

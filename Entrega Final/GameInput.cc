@@ -49,6 +49,9 @@ act::action GameInput::getInputEvent() {
   if (al_key_down(&inputState, ALLEGRO_KEY_1)) {
      return act::action::FIRE_SECONDARY;
   }
+  if (al_key_down(&inputState, ALLEGRO_KEY_ESCAPE)) {
+   return act::action::QUIT_GAME;
+  }
    return act::action::NO_ACTION;
 }
 

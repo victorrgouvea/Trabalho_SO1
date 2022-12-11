@@ -33,7 +33,8 @@ class Laser: public Projectile {
 
 
   private:
-   bool in_bound();
+  std::shared_ptr<Sprite> sprite;
+  bool in_bound();
 };
 
 __END_API

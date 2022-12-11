@@ -11,9 +11,10 @@ __BEGIN_API
 
 Player::Player()
 {
+  color = al_map_rgb(150, 0, 0);
   laserTimer = std::make_shared<Timer> (60);
   laserDelay = 6;
-  missileTimer = std::make_shared<Timer> (60);
+  missileTimer = std::make_shared<Timer> (15);
   missileDelay = 25;
   laserTimer->create();
   missileTimer->create();
@@ -39,7 +40,7 @@ bool Player::alive() {
 void Player::fire(std::string fire_type) {
     if (fire_type == "laser") {
         if (laserTimer->getCount() > laserDelay) {
-            Laser *laser = new Laser(centre, color, Vector(500, 0));
+            Laser *laser = new Laser(centre, al_map_rgb(150, 0, 0), Vector(500, 0));
             MainThread::engine->pushEnemiesProj(laser);
             MainThread::gameWindow->addProjectile(laser);
             laserTimer->srsTimer();
@@ -63,13 +64,12 @@ void Player::run()
 {
 	while (MainThread::gameWindow->getGameRunning())
 	{
-
-		if (MainThread::gameWindow == nullptr || MainThread::engine == nullptr)
+		if (MainThread::engine == nullptr)
 			Thread::yield();
+  
 		handleInput();
 		Thread::yield();
 	}
-    std::cout << "chegou aqui\n";
 }
 
 void Player::draw()
@@ -79,7 +79,7 @@ void Player::draw()
 
 void Player::update(double diffTime)
 {
-	centre =  centre + this->speed * diffTime;
+	centre =  centre + speed * diffTime;
 	selectShipAnimation(); // must happen before we reset our speed
 	speed = Vector(0, 0);	 // reset our speed
 	checkBoundary();
@@ -115,6 +115,9 @@ void Player::handleInput() {
   }
   if (inputEvent == act::action::FIRE_PRIMARY) {
     fire("laser");
+  }
+  if (inputEvent == act::action::QUIT_GAME) {
+    MainThread::gameWindow->setGameRunning(false);
   }
 }
 

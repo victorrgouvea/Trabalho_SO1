@@ -16,13 +16,6 @@ __BEGIN_API
 class Projectile : public Drawable {
   public:
    
-   Projectile(Point p, ALLEGRO_COLOR c, Vector s) : centre(p), color(c), speed(s)
-   {
-      live = true;
-   }
-
-   virtual ~Projectile() { }
-
    virtual void load_assets() = 0;
    
    virtual void draw() = 0;

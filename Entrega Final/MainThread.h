@@ -30,7 +30,6 @@ public:
         inputT = new Thread(inputInit);
         engineT  = new Thread(engineInit);
         playerT->join();
-        std::cout << "Join do player \n";
         windowT->join();
         inputT->join();
         engineT->join();
