@@ -1,7 +1,6 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "threads/traits.h"
 #include "Drawable.h"
 
 __BEGIN_API

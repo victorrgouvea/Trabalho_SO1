@@ -1,7 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "Threads/traits.h"
+#include "traits.h"
 #include "Drawable.h"
 
 __BEGIN_API

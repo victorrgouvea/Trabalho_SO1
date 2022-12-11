@@ -6,8 +6,8 @@
 #include <string>
 #include <stdio.h>
 #include <list> // Implementação de Lista ligada
-#include "Threads/thread.h"
-#include "Threads/traits.h"
+#include "thread.h"
+#include "traits.h"
 
 #include "Player.h"
 #include "GameInput.h"
@@ -26,33 +26,40 @@ public:
     ~GameWindow();
     void run();
     bool getGameRunning() {return isGameRunning;}
-    bool setGameRunning(bool valor) {isGameRunning = valor;}
-    bool getFinish() { return _finish; }
-    void setFinish(bool condition) { this->_finish = condition; }
-    std::list<Drawable *> getDrawList() { return spritesToDraw; }
-    void pushSprite(Drawable *sprite);
-    void removeSprite(Drawable *sprite);
-
+    void setGameRunning(bool valor) {isGameRunning = valor;}
+    std::list<Enemy *> getEnemyList() { return enemyToDraw; }
+    std::list<Projectile *> getProjectileList() { return projectToDraw; }
+    
     // Por algum motivo o compilador não deixa definir elas no ,cc
-    void pushSprite(Drawable *sprite)
+    void addEnemy(Enemy *enemy)
     {
-        spritesToDraw.push_front(sprite);
+        enemyToDraw.push_front(enemy);
     }       
-    void removeSprite(Drawable *sprite)
+    void removeEnemy(Enemy *enemy)
     { 
-        spritesToDraw.remove(sprite); 
+        enemyToDraw.remove(enemy); 
     }
- 
+    void addProjectile(Projectile *projectile)
+    {
+        projectToDraw.push_front(projectile);
+    }       
+    void removeProjectile(Projectile *projectile)
+    { 
+        projectToDraw.remove(projectile); 
+    }
+    int getWidth() {return _displayWidth;}
+    int getHeight() {return _displayHeight;}
 private:
     // Methods
-    std::list<Drawable *> spritesToDraw;
+    std::list<Enemy *> enemyToDraw;
+    std::list<Projectile *> projectToDraw;
     void init();
-    void draw();
+    void drawEnemy();
+    void drawProject();
     void loadSprites();
     void drawBackground();
     void updateBackGround(double diffTime);
 
-    bool _finish;
     bool eraseData;
     // Window variables
     int _displayWidth;

@@ -1,3 +1,4 @@
+
 #include <stdexcept>
 #include <iostream>
 #include "Player.h"
@@ -35,17 +36,16 @@ bool Player::alive() {
     return remainingLifes > 0;
 }
 
-void Player::fire(string fire_type) {
-    if (fire_type == 'laser') {
+void Player::fire(std::string fire_type) {
+    if (fire_type == "laser") {
         if (laserTimer->getCount() > laserDelay) {
-            Laser *laser = new Laser(centre, color, 500, true);
-            // Trata de desenhar o sprite
-            MainThread::Engine->addPlayerShot(laser);
-            // Trata de calcular a colisão do tiro
-            MainThread::GameWindow->addDrawableItem(laser);
+            Laser *laser = new Laser(centre, color, Vector(500, 0));
+            MainThread::engine->pushEnemiesProj(laser);
+            MainThread::gameWindow->addProjectile(laser);
             laserTimer->srsTimer();
 	    }
-    } else if (fire_type == 'missile') {
+    /*
+    } else if (fire_type == "missile") {
         if (missileTimer->getCount() > missileDelay) {
             Missile *missile = new Missile(centre, color, 400, true);
             // Trata de desenhar o sprite
@@ -55,24 +55,21 @@ void Player::fire(string fire_type) {
             missileTimer->srsTimer();
 	    }
     }
+    */
+  }
 }
-
-
-
-
-bool Player::isOutside() { return (!this->isDead()); }
 
 void Player::run()
 {
-	while (!GameConfigs::finished)
+	while (MainThread::gameWindow->getGameRunning())
 	{
-		// Não executa enquanto as referências não forem corretas
-		if (MainThread:_window == nullptr || MainThread:_collision == nullptr)
-			//Thread::yield();
 
-		>processAction();
-		//Thread::yield();
+		if (MainThread::gameWindow == nullptr || MainThread::engine == nullptr)
+			Thread::yield();
+		handleInput();
+		Thread::yield();
 	}
+    std::cout << "chegou aqui\n";
 }
 
 void Player::draw()
@@ -83,14 +80,24 @@ void Player::draw()
 void Player::update(double diffTime)
 {
 	centre =  centre + this->speed * diffTime;
-	updateShipAnimation(); // must happen before we reset our speed
+	selectShipAnimation(); // must happen before we reset our speed
 	speed = Vector(0, 0);	 // reset our speed
-	checkExceedingWindowLimit();
+	checkBoundary();
 }
+
+bool Player::isOutside()
+{
+	if ((centre.x > MainThread::gameWindow->getWidth()) ||
+			(centre.x < 0) ||
+			(centre.y > MainThread::gameWindow->getHeight()) ||
+			(centre.y < 0))
+			return true;
+  return false;
+	};
 
 void Player::handleInput() {
 
-  act::action inputEvent = MainThread::kBoardObj->getInputEvent();
+  act::action inputEvent = MainThread::gamekeyb->getInputEvent();
   if (inputEvent == act::action::MOVE_UP) {
     speed.y -= 250;
   }
@@ -104,10 +111,10 @@ void Player::handleInput() {
     speed.x -= 250;
   }
   if (inputEvent == act::action::FIRE_SECONDARY) {
-    fire('missile');
+    fire("missile");
   }
   if (inputEvent == act::action::FIRE_PRIMARY) {
-    fire('laser');
+    fire("laser");
   }
 }
 

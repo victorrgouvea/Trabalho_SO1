@@ -8,13 +8,14 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "Threads/traits.h"
-#include "Threads/thread.h"
+#include "traits.h"
+#include "thread.h"
 #include <list>
 #include "Point.h"
 #include "Projectile.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "MainThread.h"
 
 __BEGIN_API
 
@@ -25,8 +26,6 @@ class Engine {
       Engine();
       ~Engine();
 
-      void setGameWindow(GameWindow *gameWindow);
-      void setPlayer(Player *player);
       void run();
       void pushEnemiesProj(Projectile *proj);
       void pushPlayerProj(Projectile *proj);
@@ -36,14 +35,10 @@ class Engine {
 
       void playerCollisionCheck();
       void enemyCollisionCheck();
-      bool playerHitCheck(Projectile *projectile, Hittable *hittable);
-      bool enemyHitCheck();
-      void objectsClean();
+      bool playerHitCheck(Projectile *projectile);
+      bool enemyHitCheck(Projectile *projectile, Enemy *enemy);
 
 
-      GameWindow * gameWindow;
-      Player * player;
-      
       // Listas que armazenam os projeteis que tocaram o jogador ou algum inimigo
       std::list<Projectile *> enemiesProj;
       std::list<Projectile *> playerProj;
@@ -52,62 +47,6 @@ class Engine {
    
 };
 
-/*public:
-   Engine();
-   ~Engine();
-   
-   void init();
-   void run();
-   void draw();
-   void update(double dt);
-
-   void gameLoop(float& prevTime);
-
-   act::action input(ALLEGRO_KEYBOARD_STATE&);
-   void drawShip(std::shared_ptr<Sprite> sprite, int flags);
-   void drawBackground();
-
-   inline int getWidth() const {
-      return _displayWidth;
-   }
-   inline int getHeight() const {
-      return _displayHeight;
-   }
-   inline int getFps() const {
-      return _fps;
-   }
-
-  private:
-   void loadSprites();
-   //Checks data of the spaceship
-   void checkBoundary();
-   void selectShipAnimation();
-   std::shared_ptr<Sprite> spaceShip;
-   Point centre;        /**< ship position */
-    //  ALLEGRO_COLOR color; /**< ship color */   
-     // Vector speed;        /**< movement speed in any direction */
-     // int row;             /**<row of animation to be played */
-      //int col;             /**< column of animation to be played */
-
-      //Background
-      //Point bgMid;/**<point used by the background to draw from */
-      //Point fgMid;
-      //Point fg2Mid;
-      //Vector bgSpeed;/**<background movement speed */
-      //Vector fgSpeed;
-      //std::shared_ptr<Sprite> bg;/**<shared pointer to background animation */
-      //std::shared_ptr<Sprite> fg;
-
-      // general game variables
-      //int _displayWidth;
-      //int _displayHeight;
-      //int _fps;
-      // allegro objects
-      //ALLEGRO_TIMER *_timer;
-      //ALLEGRO_EVENT_QUEUE *_eventQueue;
-      //ALLEGRO_DISPLAY *_display;
-
-      //bool _finish;
 __END_API
 
 

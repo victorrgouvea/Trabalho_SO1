@@ -12,9 +12,15 @@ __BEGIN_API
 class CPU; //declaração das classes criadas nos trabalhos devem ser colocadas aqui
 class Thread;
 class System;
-class Debug;
+class MainThread;
 class Lists;
+class Debug;
 class Engine;
+class Point;
+class Player;
+class Laser;
+class GameInput;
+class GameWindow;
 //declaração da classe Traits
 template<typename T>
 struct Traits {
@@ -48,6 +54,24 @@ template<> struct Traits<Lists>: public Traits<void>
 {
     static const bool debugged = false;
 }; 
+
+template <>
+struct Traits<GameWindow> : public Traits<void>
+{
+    static const bool debugged = false;
+};
+
+template <>
+struct Traits<Player> : public Traits<void>
+{
+    static const bool debugged = false;
+};
+
+template <>
+struct Traits<GameInput> : public Traits<void>
+{
+    static const bool debugged = false;
+};
 
 
 __END_API

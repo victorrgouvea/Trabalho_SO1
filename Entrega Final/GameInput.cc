@@ -22,7 +22,8 @@ GameInput::GameInput()
 
 void GameInput::run()
 {
-    while (MainThread::GameWindow.>get)
+     
+    while (MainThread::gameWindow->getGameRunning())
     {
         al_get_keyboard_state(&inputState);
         Thread::yield();

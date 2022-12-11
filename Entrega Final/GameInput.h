@@ -5,8 +5,8 @@
 #include <allegro5/allegro.h>
 #include <memory>
 #include <string>
-#include "Threads/thread.h"
-#include "Threads/traits.h"
+#include "thread.h"
+#include "traits.h"
 #include "MainThread.h"
 #include "Sprite.h"
 #include "Vector.h"
@@ -19,7 +19,6 @@ class GameInput
 
 public:
     GameInput();
-    ~GameInput();
 
     void init();
     void run();

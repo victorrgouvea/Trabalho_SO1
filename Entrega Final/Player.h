@@ -2,8 +2,8 @@
 #define PLAYER_H
 
 #include <memory>
-#include "Threads/thread.h"
-#include "Threads/traits.h"
+#include "thread.h"
+#include "traits.h"
 #include "GameInput.h"
 #include "Sprite.h"
 #include "Vector.h"
@@ -19,7 +19,7 @@ __BEGIN_API
 
 class Collision;
 
-class Player {
+class Player: public Drawable {
 
 public:
 	Player();
@@ -30,15 +30,15 @@ public:
 	void draw();
 	void hit();
 	bool alive();
-	bool isOutside();
 	void update(double diffTime);
     Point getCentre() { return centre; }
     void handleInput();
-	void fire(string fire_type);
+	void fire(std::string fire_type);
     void checkBoundary();
-	void updateShipAnimation();
-
-
+	void selectShipAnimation();
+	bool isOutside();
+	Point getPosition() { return centre; }
+	int getSize() { return playerSize; }  // Retorna o tamanho da nave hardcoded
 
 private:
 
@@ -48,6 +48,7 @@ private:
     int laserDelay;
 	int missileDelay;
     int remainingLifes = 3;
+	int playerSize = 16;
 
 	// Draw information
 	std::shared_ptr<Sprite> playerSprite;

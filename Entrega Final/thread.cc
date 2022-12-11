@@ -76,7 +76,6 @@ void Thread::dispatcher() {
         db<Thread>(TRC) << "ID do head: " << Thread::_ready.head()->object()->_id << "\n";
         // Remove o próximo element a ser executada da lista de prontos
         Ordered_List<Thread>::Element * next_element = _ready.remove();
-
         //atualiza o status da própria thread dispatacher para READY e reinsire a mesma em _ready
         Thread::_dispatcher._state = READY;
         Thread::_ready.insert(&(_dispatcher._link));

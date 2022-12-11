@@ -7,13 +7,24 @@
  *
  * provides the declaration of the draw function
  */
+#include "Point.h"
+#include "traits.h"
+
+__BEGIN_API
+
 class Drawable {
   public:
    /**
     * @fn virtual void draw()
     * @brief virtual function to draw derived objects
     */ 
-   virtual void draw() = 0;
+  virtual void draw() = 0;
+  virtual void update(double diffTime) = 0;
+  virtual bool isOutside() = 0;
+  virtual int getSize() = 0;
+  virtual Point getPosition() = 0;
 };
+
+__END_API
 
 #endif

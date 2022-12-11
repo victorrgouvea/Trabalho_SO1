@@ -3,13 +3,20 @@
 
 #include <allegro5/allegro.h>
 
-#include "Point.h"
-#include "Vector.h"
+#include "thread.h"
 #include "traits.h"
+
+#include "Player.h"
+#include "GameInput.h"
+#include "Sprite.h"
+#include "Vector.h"
+#include "Drawable.h"
+#include "Enemy.h"
+#include "Projectile.h"
 
 __BEGIN_API
 
-class Laser {
+class Laser: public Projectile {
   public:
    Laser (Point p, ALLEGRO_COLOR c, Vector s);   
    ~Laser();
@@ -20,7 +27,11 @@ class Laser {
    void draw();
    void update(double dt);
    void load_assets() { }
-   
+   bool isOutside();
+   Point getPosition() { return centre; }
+	 int getSize() { return 16; } 
+
+
   private:
    bool in_bound();
 };
