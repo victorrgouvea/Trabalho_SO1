@@ -4,7 +4,7 @@ __BEGIN_API
 
 GameInput::GameInput()
 {
-    if ((this->_eventQueue = al_create_event_queue()) == NULL)
+    if ((_inputQueue = al_create_event_queue()) == NULL)
     {
         std::cout << "error, could not create event queue\n";
         exit(1);
@@ -17,7 +17,7 @@ GameInput::GameInput()
     }
 
     // register keyboard
-    al_register_event_source(_eventQueue, al_get_keyboard_event_source());
+    al_register_event_source(_inputQueue, al_get_keyboard_event_source());
 }
 
 void GameInput::run()
@@ -30,29 +30,23 @@ void GameInput::run()
     }
 }
 
-act::action GameInput::getInputEvent() {
-  if (al_key_down(&inputState, ALLEGRO_KEY_W)) {
-     return act::action::MOVE_UP;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_D)) {
-     return act::action::MOVE_RIGHT;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_S)) {
-     return act::action::MOVE_DOWN;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_A)) {
-     return act::action::MOVE_LEFT;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_SPACE)) {
-     return act::action::FIRE_PRIMARY;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_1)) {
-     return act::action::FIRE_SECONDARY;
-  }
-  if (al_key_down(&inputState, ALLEGRO_KEY_ESCAPE)) {
-   return act::action::QUIT_GAME;
-  }
-   return act::action::NO_ACTION;
+bool GameInput::getInputEvent(act::action key)
+{
+   if (key == act::action::MOVE_UP)
+      return al_key_down(&inputState, ALLEGRO_KEY_W);
+   else if (key == act::action::MOVE_DOWN)
+      return al_key_down(&inputState, ALLEGRO_KEY_S);
+   else if (key == act::action::MOVE_LEFT)
+      return al_key_down(&inputState, ALLEGRO_KEY_A);
+   else if (key == act::action::MOVE_RIGHT)
+      return al_key_down(&inputState, ALLEGRO_KEY_D);
+   else if (key == act::action::FIRE_PRIMARY)
+      return al_key_down(&inputState, ALLEGRO_KEY_SPACE);
+   else if (key == act::action::FIRE_SECONDARY)
+      return al_key_down(&inputState, ALLEGRO_KEY_1);
+    else
+      return false;
+       
 }
 
 __END_API

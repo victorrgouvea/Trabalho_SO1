@@ -22,11 +22,11 @@ public:
 
     void init();
     void run();
-    act::action getInputEvent();
+    bool getInputEvent(act::action key);
 
+    ALLEGRO_EVENT_QUEUE *_inputQueue;
 private:
     ALLEGRO_KEYBOARD_STATE inputState;
-    ALLEGRO_EVENT_QUEUE *_eventQueue;
     float startTime = 0;
     float currentTime = 0;
     

@@ -12,7 +12,7 @@
 
 #include <memory>
 #include <vector>
-
+#include "MainThread.h"
 #include "Point.h"
 #include "Vector.h"
 #include "Projectile.h"
@@ -23,19 +23,21 @@ __BEGIN_API
 
 class Missile : public Projectile {   
   public:
-   Missile(Point p, ALLEGRO_COLOR c, Vector s);
+   Missile(Point p, ALLEGRO_COLOR c, Vector s, bool isPlayerShot);
    ~Missile();
-   
-   void load_assets();
+   Point centre;
+   ALLEGRO_COLOR color;
+   Vector speed;
+   bool live;
    void draw();
    void update(double dt);
-   
-  private:
-   std::vector< std::shared_ptr<Sprite> > mvec;
-   int mAnim;   
-   bool in_bound();
+   void loadSprites();
+   bool isOutside();
+   Point getPosition() { return centre; }
+	 int getSize() { return 16; } 
    double angle;
-   
+   std::vector<std::shared_ptr<Sprite>> sprites;
+   int currentSpriteIndex;
 };
 
 __END_API

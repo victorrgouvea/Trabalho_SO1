@@ -14,7 +14,7 @@ Player::Player()
   color = al_map_rgb(150, 0, 0);
   laserTimer = std::make_shared<Timer> (60);
   laserDelay = 6;
-  missileTimer = std::make_shared<Timer> (15);
+  missileTimer = std::make_shared<Timer> (60);
   missileDelay = 25;
   laserTimer->create();
   missileTimer->create();
@@ -45,19 +45,15 @@ void Player::fire(std::string fire_type) {
             MainThread::gameWindow->addProjectile(laser);
             laserTimer->srsTimer();
 	    }
-    /*
+    
     } else if (fire_type == "missile") {
         if (missileTimer->getCount() > missileDelay) {
-            Missile *missile = new Missile(centre, color, 400, true);
-            // Trata de desenhar o sprite
-            MainThread::_window->addDrawableItem(missile);
-            // Trata de calcular a colisão do tiro
-            MainThread::_collision->addPlayerShot(missile);
+            Missile *missile = new Missile(centre, al_map_rgb(150, 0, 0), Vector(500, 0), true);
+            MainThread::engine->pushEnemiesProj(missile);
+            MainThread::gameWindow->addProjectile(missile);
             missileTimer->srsTimer();
 	    }
     }
-    */
-  }
 }
 
 void Player::run()
@@ -96,27 +92,21 @@ bool Player::isOutside()
 	};
 
 void Player::handleInput() {
-
-  act::action inputEvent = MainThread::gamekeyb->getInputEvent();
-  if (inputEvent == act::action::MOVE_UP) {
-    speed.y -= 250;
-  }
-  if (inputEvent == act::action::MOVE_RIGHT) {
-    speed.x += 250;
-  }
-  if (inputEvent == act::action::MOVE_DOWN) {
-    speed.y += 250;
-  }
-  if (inputEvent == act::action::MOVE_LEFT) {
-    speed.x -= 250;
-  }
-  if (inputEvent == act::action::FIRE_SECONDARY) {
+	if (MainThread::gamekeyb->getInputEvent(act::action::MOVE_UP))
+		this->speed.y -= 250;
+	if (MainThread::gamekeyb->getInputEvent(act::action::MOVE_DOWN))
+		this->speed.y += 250;
+	if (MainThread::gamekeyb->getInputEvent(act::action::MOVE_LEFT))
+		this->speed.x -= 250;
+	if (MainThread::gamekeyb->getInputEvent(act::action::MOVE_RIGHT))
+		this->speed.x += 250;
+	if (MainThread::gamekeyb->getInputEvent(act::action::FIRE_SECONDARY)) {
     fire("missile");
   }
-  if (inputEvent == act::action::FIRE_PRIMARY) {
+  if (MainThread::gamekeyb->getInputEvent(act::action::FIRE_PRIMARY)) {
     fire("laser");
   }
-  if (inputEvent == act::action::QUIT_GAME) {
+  if (MainThread::gamekeyb->getInputEvent(act::action::QUIT_GAME)) {
     MainThread::gameWindow->setGameRunning(false);
   }
 }

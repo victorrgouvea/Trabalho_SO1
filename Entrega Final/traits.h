@@ -19,6 +19,7 @@ class Engine;
 class Point;
 class Player;
 class Laser;
+class Missile;
 class GameInput;
 class GameWindow;
 //declaração da classe Traits

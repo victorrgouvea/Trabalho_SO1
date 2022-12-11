@@ -16,7 +16,7 @@ __BEGIN_API
 class Projectile : public Drawable {
   public:
    
-   virtual void load_assets() = 0;
+   //virtual void load_assets() = 0;
    
    virtual void draw() = 0;
    virtual void update(double diffTime) = 0;

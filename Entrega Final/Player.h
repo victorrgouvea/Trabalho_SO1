@@ -14,6 +14,7 @@
 #include "Timer.h"
 #include "Engine.h"
 #include <string.h>
+#include "Missile.h"
 
 __BEGIN_API
 
@@ -24,7 +25,6 @@ class Player: public Drawable {
 public:
 	Player();
 	~Player();
-
 	
 	void run();
 	void draw();
