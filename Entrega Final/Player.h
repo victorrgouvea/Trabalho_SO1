@@ -29,16 +29,17 @@ public:
 	void run();
 	void draw();
 	void hit();
-	bool alive();
 	void update(double diffTime);
     Point getCentre() { return centre; }
     void handleInput();
 	void fire(std::string fire_type);
     void checkBoundary();
 	void selectShipAnimation();
-	bool isOutside();
+	bool in_bound();
+	int getLives() { return remainingLifes; };
 	Point getPosition() { return centre; }
 	int getSize() { return playerSize; }  // Retorna o tamanho da nave hardcoded
+	bool getAlive() { return alive; }
 
 private:
 
@@ -46,6 +47,7 @@ private:
 	std::shared_ptr<Timer> laserTimer;
 	std::shared_ptr<Timer> missileTimer;
     int laserDelay;
+	bool alive;
 	int missileDelay;
     int remainingLifes = 3;
 	int playerSize = 16;

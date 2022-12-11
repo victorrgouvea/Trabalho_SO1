@@ -20,7 +20,7 @@ Missile::Missile(Point p, ALLEGRO_COLOR c, Vector s, bool isPlayerShot)
 }
 
 Missile::~Missile() {
-   
+
 }
 
 
@@ -44,12 +44,11 @@ void Missile::loadSprites()
 
 void Missile::update(double dt) {
    
-
    centre = centre + speed * dt;
-   if (!isOutside())
-      live = false;
+    if (!in_bound())
+       live = false;
 }
-bool Missile::isOutside()
+bool Missile::in_bound()
 {
 	if ((centre.x > MainThread::gameWindow->getWidth()) ||
 			(centre.x < 0) ||

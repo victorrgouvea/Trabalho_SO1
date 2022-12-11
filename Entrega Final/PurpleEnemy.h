@@ -4,42 +4,47 @@
 #include <memory>
 #include "thread.h"
 #include "traits.h"
-
+#include "Vector.h"
 #include "Sprite.h"
 #include "Enemy.h"
 #include "Timer.h"
-#include "PurpleEnemiesControl.h"
+#include "MainThread.h"
+#include "Laser.h"
 
 __BEGIN_API
 
 class PurpleEnemy : public Enemy
 {
 public:
-    PurpleEnemy(Point point, Vector vector, std::shared_ptr<Sprite> shipSprite, std::shared_ptr<Sprite> deathSprite, PurpleEnemiesControl *control);
+    PurpleEnemy(Point point, Vector vector, std::shared_ptr<Sprite> spriteAlive,
+                 std::shared_ptr<Sprite> deathSprite);
     ~PurpleEnemy();
-
-    bool canFire() { return this->_canFire; }
+    ALLEGRO_COLOR color;
+    Point centre;
+    Vector speed;
     void draw();
-    void attack();
     void update(double diffTime);
-    bool isOutside();
-    ALLEGRO_COLOR getColor() { return this->color; }
-    int getSize();
+    bool in_bound();
+    ALLEGRO_COLOR getColor() { return color; }
+    int getSize() { return size; }
+    void deathAnim();
+    void hit();
+    bool getAlive() { return alive;}
+    void setAlive(bool estado) { alive = estado; }
+    void fire();
+    void kill() {};
+    Point getPosition() { return centre; }
 
 private:
     // Logic
-    bool _canFire;
-    static int DELAY_BETWEEN_SHOTS;
-    std::shared_ptr<Timer> shotsTimer;
-
-    // Controle do ship, é necessário essa referência para que quando o ship for destruído ele avisar para o control que foi destruido
-    PurpleEnemiesControl *_control;
-
-    // Sprites
-    std::shared_ptr<Sprite> _shipSprite;
-    std::shared_ptr<Sprite> _deathSprite;
-    ALLEGRO_COLOR color;
-    int deathSpriteTimer;
+    int fireSpeed;
+    bool alive;
+    std::shared_ptr<Timer> fireDelay;
+    int size;
+    int lives;
+    std::shared_ptr<Sprite> sprite;
+    std::shared_ptr<Sprite> deathSprite;
+    int deathSpriteIndex;
 };
 
 __END_API

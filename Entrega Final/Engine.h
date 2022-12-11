@@ -16,6 +16,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "MainThread.h"
+#include <stdio.h>
 
 __BEGIN_API
 
@@ -27,21 +28,22 @@ class Engine {
       ~Engine();
 
       void run();
-      void pushEnemiesProj(Projectile *proj);
-      void pushPlayerProj(Projectile *proj);
-
+      void pushEnemiesProj(Drawable *proj);
+      void pushPlayerProj(Drawable *proj);
+      void removeEnemiesProj(Drawable *proj) { enemiesProj.remove(proj); }
+      void removePlayerProj(Drawable *proj) { playerProj.remove(proj); }
       
    private:
 
       void playerCollisionCheck();
       void enemyCollisionCheck();
-      bool playerHitCheck(Projectile *projectile);
-      bool enemyHitCheck(Projectile *projectile, Enemy *enemy);
+      bool playerHitCheck(Drawable *projectile);
+      bool enemyHitCheck(Drawable *projectile, Drawable *enemy);
 
 
-      // Listas que armazenam os projeteis que tocaram o jogador ou algum inimigo
-      std::list<Projectile *> enemiesProj;
-      std::list<Projectile *> playerProj;
+      // Listas que armazenam os projeteis
+      std::list<Drawable *> enemiesProj;
+      std::list<Drawable *> playerProj;
 
 
    

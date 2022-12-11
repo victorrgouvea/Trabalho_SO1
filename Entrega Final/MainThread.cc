@@ -6,11 +6,13 @@ __BEGIN_API
 Thread *MainThread::playerT;
 Thread *MainThread::windowT;
 Thread *MainThread::inputT;
-Thread *MainThread::engineT; 
+Thread *MainThread::engineT;
+Thread *MainThread::purpleEnemyT; 
 Player *MainThread::player;
 GameWindow * MainThread::gameWindow;
 GameInput *MainThread::gamekeyb;
 Engine *MainThread::engine;
+PurpleEnemyController *MainThread::purpleEnemy;
 
 void MainThread::windowInit()
 {
@@ -38,6 +40,13 @@ void MainThread::engineInit()
     engine = new Engine();
     engine->run();
     delete engine;
+}
+
+void MainThread::purpleEnemyInit()
+{
+    purpleEnemy = new PurpleEnemyController();
+    purpleEnemy->run();
+    delete purpleEnemy;
 }
 
 __END_API

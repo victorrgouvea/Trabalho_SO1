@@ -22,6 +22,8 @@ class Laser;
 class Missile;
 class GameInput;
 class GameWindow;
+class PurpleEnemyController;
+class PurpleEnemy;
 //declaração da classe Traits
 template<typename T>
 struct Traits {

@@ -23,18 +23,18 @@ class Laser: public Projectile {
    Point centre;
    ALLEGRO_COLOR color;
    Vector speed;
-   bool live;
    void draw();
    void update(double dt);
    void load_assets() { }
-   bool isOutside();
+   bool in_bound();
+   bool getAlive() { return alive; }
    Point getPosition() { return centre; }
 	 int getSize() { return 16; } 
-
+   void hit() {};
 
   private:
+   bool alive;
   std::shared_ptr<Sprite> sprite;
-  bool in_bound();
 };
 
 __END_API

@@ -7,11 +7,11 @@ Engine::Engine() {}
 
 Engine::~Engine() {}
 
-void Engine::pushEnemiesProj(Projectile *proj) {
+void Engine::pushEnemiesProj(Drawable *proj) {
    enemiesProj.push_front(proj);
 }
 
-void Engine::pushPlayerProj(Projectile *proj) {
+void Engine::pushPlayerProj(Drawable *proj) {
    playerProj.push_front(proj);
 }
 
@@ -25,24 +25,23 @@ void Engine::run() {
 }
 
 void Engine::playerCollisionCheck() { 
-   for (auto proj = enemiesProj.begin(); proj != enemiesProj.end(); proj++)
+   for (auto proj = enemiesProj.begin(); proj != enemiesProj.end(); )
     {
-        Projectile *projectile = *proj;
-
+        Drawable *projectile = *proj;
+        proj++;
         if (playerHitCheck(projectile))
         {
             Player *player = MainThread::player;
             GameWindow *gameWindow = MainThread::gameWindow;
             
             player->hit();
-            // Destrói o tiro
             gameWindow->removeProjectile(projectile);
             enemiesProj.remove(projectile);
-            delete projectile;
+            //delete projectile;
 
-            if (!player->alive())
+            if (!player->getAlive())
             {
-                gameWindow->setGameRunning(true);
+                gameWindow->setGameRunning(false);
                 return;
             }
         }
@@ -50,24 +49,25 @@ void Engine::playerCollisionCheck() {
 }
 
 void Engine::enemyCollisionCheck() {
-   for (auto proj = playerProj.begin(); proj != playerProj.end(); proj++)
+   for (auto proj = playerProj.begin(); proj != playerProj.end();)
     {
-        Projectile *projectile = *proj;
+        Drawable *projectile = *proj;
         GameWindow *gameWindow = MainThread::gameWindow;
-
-        for (auto item = gameWindow->getEnemyList().begin(); item != gameWindow->getEnemyList().end(); item++)
+        proj++;
+        for (auto item = gameWindow->getEnemyList().begin(); item != gameWindow->getEnemyList().end();)
         {
-            Enemy *enemy = *item;
-
+            Drawable *enemy = *item;
+            item++;
 
             if (enemyHitCheck(projectile, enemy))
             {
                 gameWindow->removeProjectile(projectile);
                 playerProj.remove(projectile);
-                delete projectile;
+                //delete projectile;
+                std::cout << "chegou aqui \n";
 
                 enemy->hit();
-                if (enemy->isDead())
+                if (!enemy->getAlive())
                 {
                     gameWindow->removeEnemy(enemy);
                     gameWindow->getEnemyList().remove(enemy);
@@ -78,7 +78,7 @@ void Engine::enemyCollisionCheck() {
     }
 }
 
-bool Engine::playerHitCheck(Projectile *projectile) {
+bool Engine::playerHitCheck(Drawable *projectile) {
    Player *player = MainThread::player;
    int tamanhoPlayer = player->getSize();
    Point posicaoProjectile = projectile->getPosition();
@@ -92,7 +92,7 @@ bool Engine::playerHitCheck(Projectile *projectile) {
    return false;
 }
 
-bool Engine::enemyHitCheck(Projectile *projectile, Enemy *enemy) {
+bool Engine::enemyHitCheck(Drawable *projectile, Drawable *enemy) {
    int tamanhoEnemy = enemy->getSize();
    Point posicaoProjectile = projectile->getPosition();
    Point posicaoEnemy = enemy->getPosition();

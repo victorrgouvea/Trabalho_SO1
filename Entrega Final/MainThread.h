@@ -11,6 +11,7 @@
 #include "GameInput.h"
 #include "GameWindow.h"
 #include "Player.h"
+#include "PurpleEnemyController.h"
 
 __BEGIN_API
 
@@ -22,6 +23,7 @@ public:
     static Player *player;
     static GameWindow * gameWindow;
     static GameInput *gamekeyb;
+    static PurpleEnemyController *purpleEnemy;
     static Engine *engine;
     static void run(void *name)
     {
@@ -29,14 +31,17 @@ public:
         playerT = new Thread(playerInit);
         inputT = new Thread(inputInit);
         engineT  = new Thread(engineInit);
+        purpleEnemyT = new Thread(purpleEnemyInit);
         playerT->join();
         windowT->join();
         inputT->join();
         engineT->join();
+        purpleEnemyT->join();
         delete playerT;
         delete windowT;
         delete inputT;
         delete engineT;
+        delete purpleEnemyT;
     }
 
 private:
@@ -44,8 +49,9 @@ private:
     static void playerInit();
     static void inputInit();
     static void engineInit();
+    static void purpleEnemyInit();
 
-
+    static Thread *purpleEnemyT;
     static Thread *playerT;
     static Thread *windowT;
     static Thread *inputT;

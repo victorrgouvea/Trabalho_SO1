@@ -28,16 +28,19 @@ class Missile : public Projectile {
    Point centre;
    ALLEGRO_COLOR color;
    Vector speed;
-   bool live;
    void draw();
    void update(double dt);
    void loadSprites();
-   bool isOutside();
+   bool in_bound();
    Point getPosition() { return centre; }
 	 int getSize() { return 16; } 
    double angle;
    std::vector<std::shared_ptr<Sprite>> sprites;
    int currentSpriteIndex;
+   bool getAlive() { return alive; }
+   void hit() {}
+  private:
+   bool alive;
 };
 
 __END_API

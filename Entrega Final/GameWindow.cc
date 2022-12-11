@@ -40,12 +40,28 @@ void GameWindow::run()
             return;
         }
         if (event.type == ALLEGRO_EVENT_TIMER)
+            drawLives();
             drawEnemy();
             //drawProject();
             Thread::yield();
         }
 }
 
+void GameWindow::drawLives() {
+   Point centre(_displayWidth-70, _displayWidth-50);
+   if (MainThread::player->getLives() > 0) {
+	  al_draw_rectangle(_displayWidth - 70, 50, _displayWidth - 50, 70,
+			    al_map_rgb(0, 255, 0), 5);
+   }
+   if (MainThread::player->getLives()  > 1) {
+      al_draw_rectangle(_displayWidth - 110, 50, _displayWidth - 90, 70,
+			al_map_rgb(0, 255, 0), 5);
+   }
+   if (MainThread::player->getLives()  > 2) {
+      al_draw_rectangle(_displayWidth - 150, 50, _displayWidth - 130, 70,
+			al_map_rgb(0, 255, 0) , 5);
+   } 
+}
 void GameWindow::drawEnemy()
 {
     if (al_is_event_queue_empty(_eventQueue))
@@ -62,19 +78,19 @@ void GameWindow::drawEnemy()
             MainThread::player->draw();
         }
 
-        // Para cada item para desenhar faz update, desenha e caso já tenha terminado então coloca numa outra lista para remover
-        for (auto iter = enemyToDraw.begin(); iter != enemyToDraw.end(); iter++)
+        for (auto iter = enemyToDraw.begin(); iter != enemyToDraw.end();)
         {
-            Drawable *item = *iter;
             
+            Drawable *item = *iter;
+            iter++;
             item->update(newTime);
             item->draw();
         }
 
-        for (auto iter = projectToDraw.begin(); iter != projectToDraw.end(); iter++)
+        for (auto iter = projectToDraw.begin(); iter != projectToDraw.end();)
         {
             Drawable *item = *iter;
-            
+            iter++;
             item->update(newTime);
             item->draw();
         }

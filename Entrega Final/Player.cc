@@ -21,6 +21,7 @@ Player::Player()
   laserTimer->startTimer();
   missileTimer->startTimer();
   speed = Vector(0, 0);
+  alive = true;
   loadSprites();
 }
 
@@ -31,17 +32,16 @@ Player::~Player()
 
 void Player::hit() {
     remainingLifes -= 1;
-}
-
-bool Player::alive() {
-    return remainingLifes > 0;
+    if (remainingLifes < 1) {
+      alive = false;
+    }
 }
 
 void Player::fire(std::string fire_type) {
     if (fire_type == "laser") {
         if (laserTimer->getCount() > laserDelay) {
             Laser *laser = new Laser(centre, al_map_rgb(150, 0, 0), Vector(500, 0));
-            MainThread::engine->pushEnemiesProj(laser);
+            MainThread::engine->pushPlayerProj(laser);
             MainThread::gameWindow->addProjectile(laser);
             laserTimer->srsTimer();
 	    }
@@ -49,7 +49,7 @@ void Player::fire(std::string fire_type) {
     } else if (fire_type == "missile") {
         if (missileTimer->getCount() > missileDelay) {
             Missile *missile = new Missile(centre, al_map_rgb(150, 0, 0), Vector(500, 0), true);
-            MainThread::engine->pushEnemiesProj(missile);
+            MainThread::engine->pushPlayerProj(missile);
             MainThread::gameWindow->addProjectile(missile);
             missileTimer->srsTimer();
 	    }
@@ -81,7 +81,7 @@ void Player::update(double diffTime)
 	checkBoundary();
 }
 
-bool Player::isOutside()
+bool Player::in_bound()
 {
 	if ((centre.x > MainThread::gameWindow->getWidth()) ||
 			(centre.x < 0) ||
