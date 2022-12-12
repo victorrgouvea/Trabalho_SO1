@@ -2,34 +2,48 @@
 
 __BEGIN_API
 
-int Boss::BOSS_LIFE = 50;
 
-Boss::Boss(Point point, Vector vector, std::shared_ptr<Sprite> bossSprite) : Enemy(point, vector, Boss::BOSS_LIFE)
+Boss::Boss(Point pointR, Vector vectorR, std::shared_ptr<Sprite> bossSprite)
 {
-    this->bossSprites = bossSprites;
-    this->_window = window;
-    this->_collision = _collision;
-    this->color = al_map_rgb(0, 0, 0);
+    point = pointR;
+    vector = vectorR;
+    bossSprites = bossSprite;
+    color = al_map_rgb(0, 0, 0);
 
-    this->shotsTimer = std::make_shared<Timer>(GameConfigs::fps);
-    this->shotsTimer->create();
-    this->shotsTimer->startTimer();
+    projectilesTimer = std::make_shared<Timer>(60);
+    projectilesTimer->create();
+    projectilesTimer->startTimer();
 
-    this->row = 0;
-    this->col = 0;
-    this->size = 80;
-    this->invincible = true;
+    baseHp = 50;
+    lifes = 30;
+
+    spawnTimer = std::make_shared<Timer>(60);
+    spawnTimer->create();
+    spawnTimer->startTimer();
+
+    row = 0;
+    col = 0;
+    spriteSheetIndex = 0;
+    size = 80;
+    targatable = false;
+}
+
+void Boss::run() {
+    
 }
 
 void Boss::hit(int damage)
 {
-    if (!this->invincible)
-        this->life -= damage;
+    
 }
 
 void Boss::draw()
 {
-    this->updateSprite();
+    updateFrame();
+    if (lifes > 0) {
+        bossSprites->draw_boss(row, col, 200, 200, point, 0);
+    }
+
 }
 
 void Boss::attack() {}
@@ -38,58 +52,53 @@ bool Boss::isOutside() { return false; }
 
 void Boss::update(double diffTime)
 {
-    this->_point = this->_point + this->_speed * diffTime;
+    point = point + vector * diffTime;
 
-    // Boss aparece e começa andando até chegar no ponto 650 da tela
-    if (this->_point.x < 650 && this->invincible)
+    if (point.x < 700 && !targatable)
     {
-        this->_point.x = 0;
-        this->_speed.x = 0;
-        this->_speed.y = -100;
+        targatable = true;
+        vector.x = 0;
+        vector.y = 100;
     }
 
-    // Quando o boss estiver indo pra baixo
-    if (this->_point.y > (500 + rand() % 100) && this->_speed.y > 0)
-        this->_speed.y = this->_speed.y * -1;
+    if (point.y > 450 && vector.y > 0)
+        vector.reflectY();
 
-    // Quando o boss estiver indo pra cima
-    if (this->_point.y < (150 + rand() % 100) && this->_speed.y < 0)
-        this->_speed.y = this->_speed.y * -1;
+    if (point.y < 150 && vector.y < 0)
+        vector.reflectY();
 
-    if (this->shotsTimer->getCount() > this->fireSpeed)
+    if (projectilesTimer->getCount() > shotSpeed)
     {
-        this->_canFire = true;
-        this->shotsTimer->srsTimer();
+        canFire = true;
+        projectilesTimer->srsTimer();
     }
 }
 
-bool Boss::isDead() { return this->life <= 0; }
+bool Boss::isDead() { return lifes <= 0; }
 
-int Boss::getSize() { return this->size; }
-
-void Boss::updateSprite()
+void Boss::updateFrame()
 {
-    if (this->life > Boss::BOSS_LIFE)
-        this->spritesIndex = 0;
+    if (lifes > baseHp)
+        spriteSheetIndex = 0;
 
-    if (this->life <= Boss::BOSS_LIFE && this->spritesIndex < 3)
+    if (lifes <= baseHp && spriteSheetIndex < 3)
     {
-        this->fireSpeed = rand() % 50 + 20;
-        this->_speed = this->_speed * 1.1;
-        this->size = 70;
-        this->spritesIndex++;
+        shotSpeed = rand() % 50 + 20;
+        vector = vector * 1.1;
+        size = 70;
+        spriteSheetIndex++;
     }
     // final damage animation-- fire speed up again
-    if (this->life <= 20 && this->spritesIndex < 8)
+    if (lifes <= 20 && spriteSheetIndex < 8)
     {
-        this->fireSpeed = rand() % 30 + 20;
-        this->_speed = this->_speed * 1.1;
-        this->size = 60;
-        this->spritesIndex++;
+        shotSpeed = rand() % 30 + 20;
+        vector = vector * 1.1;
+        size = 60;
+        spriteSheetIndex++;
     }
     // interpret index as row and col of sprite sheet
-    this->row = this->spritesIndex / 3;
-    this->col = this->spritesIndex % 3;
+    row = spriteSheetIndex / 3;
+    col = spriteSheetIndex % 3;
 }
 
 __END_API

@@ -33,9 +33,9 @@ bool PurpleEnemy::in_bound() {
 }
 
 PurpleEnemy::~PurpleEnemy() {
-   MainThread::purpleEnemy->getShips().remove(this);
+   MainThread::purpleEnemy->removeShip(this);
+   MainThread::engine->removeEnemies(this);
    MainThread::gameWindow->removeEnemy(this);
-
 }
 
 void PurpleEnemy::draw() {
@@ -44,7 +44,6 @@ void PurpleEnemy::draw() {
    }
    else {
       if (deathSpriteIndex < 5) {
-       deathAnim();
       }
    }      
 }
@@ -70,9 +69,7 @@ void PurpleEnemy::update(double dt) {
    if (!in_bound()) {
       alive = false;
    }
-   if (!alive) {
-    delete this;
-   }
+
    // check y bound and adjust if out
    if (centre.y > 600 - size && speed.y > 0)  
       speed.reflectY();

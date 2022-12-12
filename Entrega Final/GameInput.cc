@@ -44,6 +44,8 @@ bool GameInput::getInputEvent(act::action key)
       return al_key_down(&inputState, ALLEGRO_KEY_SPACE);
    else if (key == act::action::FIRE_SECONDARY)
       return al_key_down(&inputState, ALLEGRO_KEY_1);
+   else if (key == act::action::QUIT_GAME)
+      return al_key_down(&inputState, ALLEGRO_KEY_ESCAPE);
     else
       return false;
        

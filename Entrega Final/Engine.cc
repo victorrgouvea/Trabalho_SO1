@@ -15,11 +15,15 @@ void Engine::pushPlayerProj(Drawable *proj) {
    playerProj.push_front(proj);
 }
 
+void Engine::pushEnemies(Enemy *enem) {
+   enemies.push_front(enem);
+}
+
 void Engine::run() {
  
    while (MainThread::gameWindow->getGameRunning()) {
       playerCollisionCheck();  // checa se o player foi atingido por alguma coisa
-      enemyCollisionCheck();  // checa se algum inimigo foram atingidos pelo player
+      enemyCollisionCheck();
       Thread::yield();
    }
 }
@@ -37,7 +41,6 @@ void Engine::playerCollisionCheck() {
             player->hit();
             gameWindow->removeProjectile(projectile);
             enemiesProj.remove(projectile);
-            //delete projectile;
 
             if (!player->getAlive())
             {
@@ -49,29 +52,28 @@ void Engine::playerCollisionCheck() {
 }
 
 void Engine::enemyCollisionCheck() {
-   for (auto proj = playerProj.begin(); proj != playerProj.end();)
+
+    GameWindow *gameWindow = MainThread::gameWindow;
+    for (auto proj = playerProj.begin(); proj != playerProj.end();)
     {
         Drawable *projectile = *proj;
-        GameWindow *gameWindow = MainThread::gameWindow;
         proj++;
-        for (auto item = gameWindow->getEnemyList().begin(); item != gameWindow->getEnemyList().end();)
-        {
-            Drawable *enemy = *item;
-            item++;
 
+        for (auto item = enemies.begin(); item != enemies.end();)
+        {
+            Enemy *enemy = *item;
+            item++;
+            
             if (enemyHitCheck(projectile, enemy))
             {
                 gameWindow->removeProjectile(projectile);
                 playerProj.remove(projectile);
-                //delete projectile;
-                std::cout << "chegou aqui \n";
-
                 enemy->hit();
                 if (!enemy->getAlive())
                 {
+                    MainThread::purpleEnemy->removeShip(enemy);
+                    removeEnemies(enemy);
                     gameWindow->removeEnemy(enemy);
-                    gameWindow->getEnemyList().remove(enemy);
-                    //delete enemy;
                 }
             }
         }
@@ -92,11 +94,10 @@ bool Engine::playerHitCheck(Drawable *projectile) {
    return false;
 }
 
-bool Engine::enemyHitCheck(Drawable *projectile, Drawable *enemy) {
+bool Engine::enemyHitCheck(Drawable *projectile, Enemy *enemy) {
    int tamanhoEnemy = enemy->getSize();
    Point posicaoProjectile = projectile->getPosition();
    Point posicaoEnemy = enemy->getPosition();
-
    if (posicaoProjectile.x > posicaoEnemy.x - tamanhoEnemy &&
         (posicaoProjectile.x < posicaoEnemy.x + tamanhoEnemy) &&
         (posicaoProjectile.y > posicaoEnemy.y - tamanhoEnemy) &&

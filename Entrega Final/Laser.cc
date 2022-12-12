@@ -18,8 +18,9 @@ Laser::~Laser() {
 
 void Laser::update(double dt) {
    centre = centre + speed * dt;
-    if (!in_bound())
+    if (!in_bound()) {
        alive = false;
+   }
 }
 bool Laser::in_bound()
 {
@@ -27,8 +28,8 @@ bool Laser::in_bound()
 			(centre.x < 0) ||
 			(centre.y > MainThread::gameWindow->getHeight()) ||
 			(centre.y < 0))
-			return true;
-  return false;
+			return false;
+  return true;
 };
 void Laser::draw() {
    Point tracer = centre + speed * (0.05);  

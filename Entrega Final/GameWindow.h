@@ -33,7 +33,7 @@ public:
     // Por algum motivo o compilador não deixa definir elas no ,cc
     void addEnemy(Drawable *enemy)
     {
-        enemyToDraw.push_front(enemy);
+        enemyToDraw.push_back(enemy);
     }       
     void removeEnemy(Drawable *enemy)
     { 
@@ -41,7 +41,7 @@ public:
     }
     void addProjectile(Drawable *projectile)
     {
-        projectToDraw.push_front(projectile);
+        projectToDraw.push_back(projectile);
     }       
     void removeProjectile(Drawable *projectile)
     { 

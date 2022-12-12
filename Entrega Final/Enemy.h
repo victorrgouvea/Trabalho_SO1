@@ -19,6 +19,7 @@ public:
     virtual int getSize() = 0;
     virtual Point getPosition() = 0;
     virtual bool getAlive() = 0;
+    virtual void fire() = 0;
 };
 
 __END_API

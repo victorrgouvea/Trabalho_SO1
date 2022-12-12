@@ -46,7 +46,7 @@ void PurpleEnemyController::handleShips()
 {
     for (auto item = this->ships.begin(); item != this->ships.end(); item++)
     {
-        PurpleEnemy *ship = *item;
+        Enemy *ship = *item;
         ship->fire();
     }
 }
@@ -67,7 +67,13 @@ void PurpleEnemyController::createShips()
     ships.push_front(purpleEnemy5);
     ships.push_front(purpleEnemy6);
     ships.push_front(purpleEnemy7);
-
+    MainThread::engine->pushEnemies(purpleEnemy1);
+    MainThread::engine->pushEnemies(purpleEnemy2);
+    MainThread::engine->pushEnemies(purpleEnemy3);
+    MainThread::engine->pushEnemies(purpleEnemy4);
+    MainThread::engine->pushEnemies(purpleEnemy5);
+    MainThread::engine->pushEnemies(purpleEnemy6);
+    MainThread::engine->pushEnemies(purpleEnemy7);
     MainThread::gameWindow->addEnemy(purpleEnemy1);
     MainThread::gameWindow->addEnemy(purpleEnemy2);
     MainThread::gameWindow->addEnemy(purpleEnemy3);
@@ -79,5 +85,7 @@ void PurpleEnemyController::createShips()
 
     timerSpawn->srsTimer();
 }
+
+
 
 __END_API

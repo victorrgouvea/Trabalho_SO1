@@ -31,7 +31,7 @@ Player::~Player()
 }
 
 void Player::hit() {
-    remainingLifes -= 1;
+    remainingLifes -= 0;
     if (remainingLifes < 1) {
       alive = false;
     }
@@ -49,7 +49,7 @@ void Player::fire(std::string fire_type) {
     } else if (fire_type == "missile") {
         if (missileTimer->getCount() > missileDelay) {
             Missile *missile = new Missile(centre, al_map_rgb(150, 0, 0), Vector(500, 0), true);
-            MainThread::engine->pushPlayerProj(missile);
+            //MainThread::engine->pushPlayerProj(missile);
             MainThread::gameWindow->addProjectile(missile);
             missileTimer->srsTimer();
 	    }

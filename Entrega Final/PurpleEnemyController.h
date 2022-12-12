@@ -18,15 +18,15 @@ public:
     PurpleEnemyController();
     ~PurpleEnemyController();
     void run();
-    std::list<PurpleEnemy *> getShips() { return ships; }
-
+    std::list<Enemy *> getShips() { return ships; }
+    void removeShip(Enemy* ship) {ships.remove(ship); }
 private:
     void loadAssets();
     void createShips();
     void processLoop();
     void handleShips();
 
-    std::list<PurpleEnemy *> ships;
+    std::list<Enemy *> ships;
     std::shared_ptr<Timer> timerSpawn;
     std::shared_ptr<Sprite> shipSprite;
     std::shared_ptr<Sprite> killAnimSprite;
